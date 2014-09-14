@@ -1,6 +1,7 @@
 // Load modules
 
 var Lab = require('lab');
+var Call = require('../');
 
 
 // Declare internals
@@ -18,7 +19,21 @@ var expect = Lab.expect;
 
 describe('Call', function () {
 
-    describe('#sort', function () {
+    it('routes request', function (done) {
+
+        var router = new Call.Router();
+        router.add({ method: 'get', path: '/' }, '/');
+        router.add({ method: 'get', path: '/a' }, '/a');
+        router.add({ method: 'get', path: '/b' }, '/b');
+
+        expect(router.route('get', '/').route).to.equal('/');
+        expect(router.route('get', '/a').route).to.equal('/a');
+        expect(router.route('get', '/b').route).to.equal('/b');
+
+        done();
+    });
+
+    it('matches routes in right order', function (done) {
 
         var paths = [
             '/',
@@ -57,224 +72,58 @@ describe('Call', function () {
             '/{p*}'
         ];
 
-        it('compares every combination both ways', function (done) {
+        var requests = [
+            ['/', '/'],
+            ['/a', '/a'],
+            ['/b', '/b'],
+            ['/ab', '/ab'],
+            ['/axb', '/a{p}b'],
+            ['/axc', '/a{p}'],
+            ['/bxb', '/{p}b'],
+            ['/c', '/{p}'],
+            ['/a/b', '/a/b'],
+            ['/a/c', '/a/{p}'],
+            ['/b/', '/b/'],
+            ['/a1larry/a', '/a1{p}/a'],
+            ['/xx1/b', '/xx{p}/b'],
+            ['/xx1/a', '/x{p}/a'],
+            ['/x1/b', '/x{p}/b'],
+            ['/y/b', '/y{p?}/b'],
+            ['/0xx/b', '/{p}xx/b'],
+            ['/0x/b', '/{p}x/b'],
+            ['/ay/b', '/{p}y/b'],
+            ['/a/b/c', '/a/b/c'],
+            ['/a/b/d', '/a/b/{p}'],
+            ['/a/doc/b', '/a/d{p}c/b'],
+            ['/a/dl/b', '/a/d{p}/b'],
+            ['/a/ld/b', '/a/{p}d/b'],
+            ['/a/a/b', '/a/{p}/b'],
+            ['/a/d/c', '/a/{p}/c'],
+            ['/a/d/d', '/a/{p*2}'],
+            ['/a/b/c/d', '/a/b/c/d'],
+            ['/a/b/c/e', '/a/b/{p*2}'],
+            ['/a/c/b/d', '/a/{p}/b/{x}'],
+            ['/a/b/c/d/e', '/{p*5}'],
+            ['/a/b/c/d/e/f', '/a/b/{p*}'],
+            ['/x/b/c/d/e/f/g', '/{a}/b/{p*}'],
+            ['/x/y/c/d/e/f/g', '/{p*}']
+        ];
 
-            for (var ai = 0, al = paths.length; ai < al; ++ai) {
-                var a = { settings: { path: paths[ai] }, server: { settings: { router: { isCaseSensitive: true } } } };
-                Route.prototype._parsePath.call(a);
-
-                for (var bi = 0, bl = paths.length; bi < bl; ++bi) {
-                    if (ai === bi) {
-                        continue;
-                    }
-
-                    var b = { settings: { path: paths[bi] }, server: { settings: { router: { isCaseSensitive: true } } } };
-                    Route.prototype._parsePath.call(b);
-
-                    var a2b = Route.sort(a, b);
-                    var b2a = Route.sort(b, a);
-
-                    if (a2b !== (-1 * b2a)) {
-                        console.log('a: \'' + paths[ai] + '\' | b: \'' + paths[bi] + '\'');
-                    }
-
-                    if (ai < bi && a2b !== -1) {
-                        console.log('a: \'' + paths[ai] + '\' | b: \'' + paths[bi] + '\'');
-                    }
-
-                    expect(a2b).to.not.equal(0);
-                    expect(a2b).to.equal(-1 * b2a);
-                    expect(a2b).to.equal(ai < bi ? -1 : 1);
-                }
-            }
-
-            done();
-        });
-
-        var handler = function (path) {
-
-            return function (request, reply) {
-
-                reply(path);
-            };
-        };
-
-        var randomLoad = function () {
-
-            it('sorts random routes in right order', function (done) {
-
-                var server = new Hapi.Server();
-                var copy = Hoek.clone(paths);
-                while (copy.length) {
-                    var i = Math.floor(Math.random() * (copy.length - 1));
-                    var path = copy[i];
-                    copy = copy.filter(function (item, index, array) { return index != i; });
-                    server.route({ path: path, method: 'GET', handler: handler(path) });
-                }
-
-                var routes = server._router.routes['get'];
-                var list = [];
-                for (var i = 0, il = routes.length; i < il; ++i) {
-                    var route = routes[i];
-                    list.push(route.path);
-                }
-
-                expect(list).to.deep.equal(paths);
-                done();
-            });
-        };
-
-        for (var i = 0; i < 50; ++i) {
-            randomLoad();
-        }
-
-        var server = new Hapi.Server();
+        var router = new Call.Router();
         for (var i = 0, il = paths.length; i < il; ++i) {
-
-            var path = paths[i];
-            server.route({ path: path, method: 'GET', handler: handler(path) });
+            router.add({ method: 'get', path: paths[i] }, paths[i]);
         }
 
-        it('sorts routes in right order', function (done) {
+        for (i = 0, il = requests.length; i < il; ++i) {
+            expect(router.route('get', requests[i][0]).route).to.equal(requests[i][1]);
+        }
 
-            var routes = server._router.routes['get'];
-            var list = [];
-            for (var i = 0, il = routes.length; i < il; ++i) {
-                var route = routes[i];
-                list.push(route.path);
-            }
-
-            expect(list).to.deep.equal(paths);
-            done();
-        });
-
-        it('matches routes in right order', function (done) {
-
-            var requests = [
-                ['/', '/'],
-                ['/a', '/a'],
-                ['/b', '/b'],
-                ['/ab', '/ab'],
-                ['/axb', '/a{p}b'],
-                ['/axc', '/a{p}'],
-                ['/bxb', '/{p}b'],
-                ['/c', '/{p}'],
-                ['/a/b', '/a/b'],
-                ['/a/c', '/a/{p}'],
-                ['/b/', '/b/'],
-                ['/a1larry/a', '/a1{p}/a'],
-                ['/xx1/b', '/xx{p}/b'],
-                ['/xx1/a', '/x{p}/a'],
-                ['/x1/b', '/x{p}/b'],
-                ['/y/b', '/y{p?}/b'],
-                ['/0xx/b', '/{p}xx/b'],
-                ['/0x/b', '/{p}x/b'],
-                ['/ay/b', '/{p}y/b'],
-                ['/a/b/c', '/a/b/c'],
-                ['/a/b/d', '/a/b/{p}'],
-                ['/a/doc/b', '/a/d{p}c/b'],
-                ['/a/dl/b', '/a/d{p}/b'],
-                ['/a/ld/b', '/a/{p}d/b'],
-                ['/a/a/b', '/a/{p}/b'],
-                ['/a/d/c', '/a/{p}/c'],
-                ['/a/d/d', '/a/{p*2}'],
-                ['/a/b/c/d', '/a/b/c/d'],
-                ['/a/b/c/e', '/a/b/{p*2}'],
-                ['/a/c/b/d', '/a/{p}/b/{x}'],
-                ['/a/b/c/d/e', '/{p*5}'],
-                ['/a/b/c/d/e/f', '/a/b/{p*}'],
-                ['/x/b/c/d/e/f/g', '/{a}/b/{p*}'],
-                ['/x/y/c/d/e/f/g', '/{p*}']
-            ];
-
-            Items.serial(requests, function (request, next) {
-
-                server.inject({ method: 'GET', url: request[0] }, function (res) {
-
-                    expect(res.result).to.equal(request[1]);
-                    return next();
-                });
-            },
-            function (err) {
-
-                done();
-            });
-        });
+        done();
     });
 
-    describe('#pathRegex.validatePath', function () {
+    describe('#analyze', function () {
 
-        var testPaths = function () {
-
-            var paths = {
-                '/': true,
-                '/path': true,
-                '/path/': true,
-                '/path/to/somewhere': true,
-                '/{param}': true,
-                '/{param?}': true,
-                '/{param*}': true,
-                '/{param*5}': true,
-                '/path/{param}': true,
-                '/path/{param}/to': true,
-                '/path/{param?}': true,
-                '/path/{param}/to/{some}': true,
-                '/path/{param}/to/{some?}': true,
-                '/path/{param*2}/to': true,
-                '/path/{param*27}/to': true,
-                '/path/{param*2}': true,
-                '/path/{param*27}': true,
-                '/%20path/': true,
-                'path': false,
-                '/%path/': false,
-                '/path/{param*}/to': false,
-                '/path/{param*0}/to': false,
-                '/path/{param*0}': false,
-                '/path/{param*01}/to': false,
-                '/path/{param*01}': false,
-                '/{param?}/something': false,
-                '/{param*03}': false,
-                '/{param*3?}': false,
-                '/{param*?}': false,
-                '/{param*}/': false,
-                '/a{p}': true,
-                '/{p}b': true,
-                '/a{p}b': true,
-                '/d/a{p}': true,
-                '/d/{p}b': true,
-                '/d/a{p}b': true,
-                '/a{p}/d': true,
-                '/{p}b/d': true,
-                '/a{p}b/d': true,
-                '/d/a{p}/e': true,
-                '/d/{p}b/e': true,
-                '/d/a{p}b/e': true,
-                '/a{p}.{x}': false,
-                '/{p}{x}': false,
-                '/a{p?}': true,
-                '/{p*}d': false,
-                '/a{p*3}': false
-            };
-
-            var test = function (path, isValid) {
-
-                it('validates the path \'' + path + '\' as ' + (isValid ? 'well-formed' : 'malformed'), function (done) {
-
-                    expect(!!(path.match(Route.pathRegex.validatePath))).to.equal(isValid);
-                    done();
-                });
-            };
-
-            var keys = Object.keys(paths);
-            for (var i = 0, il = keys.length; i < il; ++i) {
-                test(keys[i], paths[keys[i]]);
-            }
-        }();
-    });
-
-    describe('#_parsePath', function () {
-
-        var testFingerprints = function () {
+        it('generates fingerprints', function (done) {
 
             var paths = {
                 '/': '/',
@@ -303,195 +152,144 @@ describe('Call', function () {
                 '/a{p?}b': '/a?b'
             };
 
-            var test = function (path, fingerprint) {
-
-                it('process the path \'' + path + '\' as ' + fingerprint, function (done) {
-
-                    var route = new Route({ path: path, method: 'get', handler: function () { } }, new Hapi.Server({ router: { isCaseSensitive: true } }));
-                    expect(route.fingerprint).to.equal(fingerprint);
-                    done();
-                });
-            };
-
+            var router = new Call.Router({ isCaseSensitive: true });
             var keys = Object.keys(paths);
             for (var i = 0, il = keys.length; i < il; ++i) {
-                test(keys[i], paths[keys[i]]);
+                expect(router.analyze(keys[i]).fingerprint).to.equal(paths[keys[i]]);
             }
-        }();
 
-        var testMatch = function () {
-
-            var paths = {
-                '/path/to/|false': {
-                    '/path/to': false,
-                    '/Path/to': false,
-                    '/path/to/': true,
-                    '/Path/to/': true
-                },
-                '/path/to/|true': {
-                    '/path/to': false,
-                    '/Path/to': false,
-                    '/path/to/': true,
-                    '/Path/to/': false
-                },
-                '/path/{param*2}/to': {
-                    '/a/b/c/d': false,
-                    '/path/a/b/to': {
-                        param: 'a/b'
-                    }
-                },
-                '/path/{param*}': {
-                    '/a/b/c/d': false,
-                    '/path/a/b/to': {
-                        param: 'a/b/to'
-                    },
-                    '/path/': {},
-                    '/path': {}
-                },
-                '/path/{p1}/{p2?}': {
-                    '/path/a/c/d': false,
-                    '/Path/a/c/d': false,
-                    '/path/a/b': {
-                        p1: 'a',
-                        p2: 'b'
-                    },
-                    '/path/a': {
-                        p1: 'a'
-                    },
-                    '/path/a/': {
-                        p1: 'a'
-                    }
-                },
-                '/path/{p1}/{p2?}|false': {
-                    '/path/a/c/d': false,
-                    '/Path/a/c': {
-                        p1: 'a',
-                        p2: 'c'
-                    },
-                    '/path/a': {
-                        p1: 'a'
-                    },
-                    '/path/a/': {
-                        p1: 'a'
-                    }
-                },
-                '/{p*}': {
-                    '/path/': {
-                        p: 'path/'
-                    }
-                },
-                '/{a}/b/{p*}': {
-                    '/a/b/path/': {
-                        a: 'a',
-                        p: 'path/'
-                    }
-                },
-                '/a{b?}c': {
-                    '/abc': {
-                        b: 'b'
-                    },
-                    '/ac': {},
-                    '/abC': false,
-                    '/Ac': false
-                },
-                '/a{b?}c|false': {
-                    '/abC': {
-                        b: 'b'
-                    },
-                    '/Ac': {}
-                },
-                '/%0A': {
-                    '/%0A': true,
-                    '/%0a': true
-                },
-                '/a/b/{c}': {
-                    '/a/b/c': true,
-                    '/a/b': false
-                }
-            };
-
-            var keys = Object.keys(paths);
-            for (var i = 0, il = keys.length; i < il; ++i) {
-
-                function test(path, matches, isCaseSensitive) {
-
-                    var server = new Hapi.Server({ router: { isCaseSensitive: isCaseSensitive } });
-                    var route = new Route({ path: path, method: 'get', handler: function () { } }, server);
-                    var mkeys = Object.keys(matches);
-                    for (var m = 0, ml = mkeys.length; m < ml; ++m) {
-                        function match(route, match, result) {
-
-                            it((result ? 'matches' : 'unmatches') + ' the path \'' + path + '\' with ' + match + ' (' + (isCaseSensitive ? 'case-sensitive' : 'case-insensitive') + ')', function (done) {
-
-                                var request = {};
-                                Request.prototype._setUrl.call(request, match);
-                                var isMatch = route.match(request);
-
-                                expect(isMatch).to.equal(!!result);
-                                if (typeof result === 'object') {
-                                    var ps = Object.keys(result);
-                                    expect(ps.length).to.equal(request._paramsArray.length);
-
-                                    for (var p = 0, pl = ps.length; p < pl; ++p) {
-                                        expect(request.params[ps[p]]).to.equal(result[ps[p]]);
-                                    }
-                                }
-
-                                done();
-                            });
-                        }
-                        match(route, mkeys[m], matches[mkeys[m]]);
-                    }
-                }
-
-                var pathParts = keys[i].split('|');
-                var isCaseSensitive = (pathParts[1] ? pathParts[1] === 'true' : true);
-
-                test(pathParts[0], paths[keys[i]], isCaseSensitive);
-            }
-        }();
+            done();
+        });
     });
 
-    describe('#match', function () {
+    describe('#route', function () {
 
-        it('returns true when called with a matching path', function (done) {
+        var paths = {
+            '/path/to/|false': {
+                '/path/to': false,
+                '/Path/to': false,
+                '/path/to/': true,
+                '/Path/to/': true
+            },
+            '/path/to/|true': {
+                '/path/to': false,
+                '/Path/to': false,
+                '/path/to/': true,
+                '/Path/to/': false
+            },
+            '/path/{param*2}/to': {
+                '/a/b/c/d': false,
+                '/path/a/b/to': {
+                    param: 'a/b'
+                }
+            },
+            '/path/{param*}': {
+                '/a/b/c/d': false,
+                '/path/a/b/to': {
+                    param: 'a/b/to'
+                },
+                '/path/': {},
+                '/path': {}
+            },
+            '/path/{p1}/{p2?}': {
+                '/path/a/c/d': false,
+                '/Path/a/c/d': false,
+                '/path/a/b': {
+                    p1: 'a',
+                    p2: 'b'
+                },
+                '/path/a': {
+                    p1: 'a'
+                },
+                '/path/a/': {
+                    p1: 'a'
+                }
+            },
+            '/path/{p1}/{p2?}|false': {
+                '/path/a/c/d': false,
+                '/Path/a/c': {
+                    p1: 'a',
+                    p2: 'c'
+                },
+                '/path/a': {
+                    p1: 'a'
+                },
+                '/path/a/': {
+                    p1: 'a'
+                }
+            },
+            '/{p*}': {
+                '/path/': {
+                    p: 'path/'
+                }
+            },
+            '/{a}/b/{p*}': {
+                '/a/b/path/': {
+                    a: 'a',
+                    p: 'path/'
+                }
+            },
+            '/a{b?}c': {
+                '/abc': {
+                    b: 'b'
+                },
+                '/ac': {},
+                '/abC': false,
+                '/Ac': false
+            },
+            '/a{b?}c|false': {
+                '/abC': {
+                    b: 'b'
+                },
+                '/Ac': {}
+            },
+            '/%0A': {
+                '/%0A': true,
+                '/%0a': true
+            },
+            '/a/b/{c}': {
+                '/a/b/c': true,
+                '/a/b': false
+            }
+        };
 
-            var server = new Hapi.Server();
-            var route = new Route({ path: '/test', method: 'get', handler: function () { } }, server);
-            var request = {
-                path: '/test',
-                method: 'get'
-            };
+        var test = function (path, matches, isCaseSensitive) {
 
-            expect(route.match(request)).to.be.true;
-            done();
-        });
+            var router = new Call.Router({ isCaseSensitive: isCaseSensitive });
+            router.add({ path: path, method: 'get' }, path);
 
-        it('returns false when called with a non-matching path', function (done) {
+            var mkeys = Object.keys(matches);
+            for (var m = 0, ml = mkeys.length; m < ml; ++m) {
+                match(router, path, mkeys[m], matches[mkeys[m]]);
+            }
+        };
 
-            var server = new Hapi.Server();
-            var route = new Route({ path: '/test', method: 'get', handler: function () { } }, server);
-            var request = {
-                path: '/test2',
-                method: 'get'
-            };
+        var match = function (router, path, match, result) {
 
-            expect(route.match(request)).to.be.false;
-            done();
-        });
+            it((result ? 'matches' : 'unmatches') + ' the path \'' + path + '\' with ' + match + ' (' + (isCaseSensitive ? 'case-sensitive' : 'case-insensitive') + ')', function (done) {
 
-        it('returns bad request route when called with an invalid path', function (done) {
+                var output = router.route('get', router.normalize(match));
+                var isMatch = !output.isBoom;
 
-            var server = new Hapi.Server();
-            var route = new Route({ path: '/{test}', method: 'get', handler: function () { } }, server);
-            var request = {
-                path: '/test%l',
-                _pathSegments: '/test%l'.split('/'),
-                method: 'get'
-            };
+                expect(isMatch).to.equal(!!result);
+                if (typeof result === 'object') {
+                    var ps = Object.keys(result);
+                    expect(ps.length).to.equal(output.paramsArray.length);
 
-            expect(route.match(request).message).to.equal('URI malformed');
-            done();
-        });
+                    for (var p = 0, pl = ps.length; p < pl; ++p) {
+                        expect(output.params[ps[p]]).to.equal(result[ps[p]]);
+                    }
+                }
+
+                done();
+            });
+        };
+
+        var keys = Object.keys(paths);
+        for (var i = 0, il = keys.length; i < il; ++i) {
+            var pathParts = keys[i].split('|');
+            var isCaseSensitive = (pathParts[1] ? pathParts[1] === 'true' : true);
+            test(pathParts[0], paths[keys[i]], isCaseSensitive);
+        }
     });
 });
