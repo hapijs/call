@@ -258,6 +258,14 @@ describe('Router', function () {
                     p1: 'a'
                 }
             },
+            '/mixedCase/|false': {
+                '/mixedcase/': true,
+                '/mixedCase/': true
+            },
+            '/mixedCase/|true': {
+                '/mixedcase/': false,
+                '/mixedCase/': true
+            },
             '/{p*}': {
                 '/path/': {
                     p: 'path/'
