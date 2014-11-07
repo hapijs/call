@@ -2,6 +2,7 @@
 
 var Lab = require('lab');
 var Call = require('../');
+var Code = require('code');
 
 
 // Declare internals
@@ -14,7 +15,7 @@ var internals = {};
 var lab = exports.lab = Lab.script();
 var describe = lab.describe;
 var it = lab.it;
-var expect = Lab.expect;
+var expect = Code.expect;
 
 
 describe('Router', function () {
@@ -144,7 +145,7 @@ describe('Router', function () {
             expect(function () {
 
                 router.add({ method: 'get', path: '/a/b/{c}' });
-            });
+            }).to.throw('New route: /a/b/{c} conflicts with existing: /a/b/{c}');
 
             done();
         });
@@ -169,6 +170,100 @@ describe('Router', function () {
 
                 router.add({ method: 'get', path: '/a/b/{c?}' });
             }).to.throw('New route: /a/b/{c?} conflicts with existing: /a/b');
+
+            done();
+        });
+
+        it('throws on duplicate route (same fingerprint)', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/test/{p1}/{p2}/end' });
+            expect(function () {
+
+                router.add({ method: 'get', path: '/test/{p*2}/end' });
+            }).to.throw('New route: /test/{p*2}/end conflicts with existing: /test/{p1}/{p2}/end');
+
+            done();
+        });
+
+        it('throws on duplicate route (case insensitive)', function (done) {
+
+            var router = new Call.Router({ isCaseSensitive: false });
+            router.add({ method: 'get', path: '/test/a' });
+            expect(function () {
+
+                router.add({ method: 'get', path: '/test/A' });
+            }).to.throw('New route: /test/A conflicts with existing: /test/a');
+
+            done();
+        });
+
+        it('allows route to differ in just case', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/test/a' });
+            expect(function () {
+
+                router.add({ method: 'get', path: '/test/A' });
+            }).to.not.throw();
+
+            done();
+        });
+
+        it('throws on duplicate route (different param name)', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/test/{p}' });
+            expect(function () {
+
+                router.add({ method: 'get', path: '/test/{P}' });
+            }).to.throw('New route: /test/{P} conflicts with existing: /test/{p}');
+
+            done();
+        });
+
+        it('throws on duplicate parameter name', function (done) {
+
+            var router = new Call.Router();
+            expect(function () {
+
+                router.add({ method: 'get', path: '/test/{p}/{p}' });
+            }).to.throw('Cannot repeat the same parameter name: p in: /test/{p}/{p}');
+
+            done();
+        });
+
+        it('throws on invalid path', function (done) {
+
+            var router = new Call.Router();
+            expect(function () {
+
+                router.add({ method: 'get', path: '/%/%' });
+            }).to.throw('Invalid path: /%/%');
+
+            done();
+        });
+
+        it('throws on duplicate route (same vhost)', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/a/b/{c}', vhost: 'example.com' });
+            expect(function () {
+
+                router.add({ method: 'get', path: '/a/b/{c}', vhost: 'example.com' });
+            }).to.throw('New route: /a/b/{c} conflicts with existing: /a/b/{c}');
+
+            done();
+        });
+
+        it('allows duplicate route (different vhost)', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/a/b/{c}', vhost: 'one.example.com' });
+            expect(function () {
+
+                router.add({ method: 'get', path: '/a/b/{c}', vhost: 'two.example.com' });
+            }).to.not.throw();
 
             done();
         });
@@ -291,6 +386,34 @@ describe('Router', function () {
                 '/a/b/c': true,
                 '/a/b': false,
                 '/a/b/': false
+            },
+            '/a/{b}/c|false': {
+                '/a/1/c': {
+                    b: '1'
+                },
+                '/A/1/c': {
+                    b: '1'
+                }
+            },
+            '/a/{B}/c|false': {
+                '/a/1/c': {
+                    B: '1'
+                },
+                '/A/1/c': {
+                    B: '1'
+                }
+            },
+            '/a/{b}/c|true': {
+                '/a/1/c': {
+                    b: '1'
+                },
+                '/A/1/c': false
+            },
+            '/a/{B}/c|true': {
+                '/a/1/c': {
+                    B: '1'
+                },
+                '/A/1/c': false
             }
         };
 

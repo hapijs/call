@@ -1,8 +1,9 @@
 // Load modules
 
-var Lab = require('lab');
 var Hoek = require('hoek');
 var Call = require('../');
+var Code = require('code');
+var Lab = require('lab');
 var Sort = require('../lib/sort');
 
 
@@ -16,7 +17,7 @@ var internals = {};
 var lab = exports.lab = Lab.script();
 var describe = lab.describe;
 var it = lab.it;
-var expect = Lab.expect;
+var expect = Code.expect;
 
 
 describe('Call', function () {
