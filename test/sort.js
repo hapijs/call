@@ -141,61 +141,61 @@ describe('Call', function () {
 
     describe('#sort', function () {
         var paths = [
-            '/detect/MobileRx',
-            '/search-token/{browseToken}',
-            '/storeLocator/ca_storefinder.do',
-            '/storeLocator/ca_storefinder_details_short.do',
-            '/find-in-store/{id}',
-            '/c/{type}/{id}',
-            '/cp/pharmacy/5431',
-            '/cp/Rollbacks/130306',
-            '/cp/All-Departments/121828',
-            '/cp/Pet-Medications/1095032',
-            '/cp/Value-of-the-Day/{path?}',
-            '/cp/New-Generic-Drugs/1094789',
-            '/cp/New-Pharmacy-Customer/1088604',
-            '/cp/Your-Walmart-Pharmacy/538515',
-            '/cp/Fill-New-Prescriptions/1088927',
-            '/cp/Pharmacy-Home-Delivery/1042239',
-            '/cp/Pharmacy-Online-Account/538509',
-            '/cp/Pharmacy-Walmart-Mobile-Device/1084324',
-            '/cp/{version}/{id}',
-            '/ip/{id}/ratings',
-            '/ip/{name}/{id}',
-            '/api/item/vod',
-            '/api/item/{id?}',
-            '/order/history/{orderId}',
-            '/browse/{name}/{browseToken}',
-            '/detect/cp/130306',
-            '/detect/cp/{id}',
-            '/detect/search/browse-ng.do',
-            '/detect/cp/{name}/{id}',
-            '/checkout/payment/choose/edit',
-            '/checkout/ship-to-home/choose/edit',
-            '/checkout/site-to-store/{lat}/{lng}',
-            '/find-in-store/{id}/{lat}/{lng}',
-            '/{loc_type}/location/find/{type}',
-            '/{loc_type}/location/list/{zip}',
-            '/{loc_type}/location/locate/{type}',
-            '/ip/{id}/components/{component_id}/{option_id}',
-            '/{loc_type}/location/map/{lat}/{lng}',
-            '/{loc_type}/location/find/{type}/{id}',
-            '/{loc_type}/location/list/{lat}/{lng}',
-            '/{loc_type}/location/locate/{type}/{id}',
-            '/ip/{id}/components/{component_id}/{option_id}/ratings',
-            '/ip/{id}/components/{component_id}/{option_id}/ratings/{sort}',
-            '/shop-by-department/{path*}',
-            '/api/topic/{id*}',
-            '/detect/ip/{path*}',
-            '/detect/tp/{path*}',
-            '/detect/photo/{path*}',
-            '/detect/browse/{path*}',
-            '/account/create/{source*}',
-            '/search-token/{browseToken}/{searchTerms*}',
-            '/c/{type}/{id}/{page*}',
-            '/detect/c/kp/{path*}',
-            '/browse/{path*}',
-            '/browse/{type}/{name}/{browseToken*}'
+            '/a/m',
+            '/b/{bt}',
+            '/d/c.do',
+            '/d/d.do',
+            '/e/{id}',
+            '/c/{t}/{i}',
+            '/f/aa/00001',
+            '/f/aa/00002',
+            '/f/aa/00003',
+            '/f/aa/00004',
+            '/f/aa/{p?}',
+            '/f/aa/00005',
+            '/f/aa/00006',
+            '/f/aa/00007',
+            '/f/aa/00008',
+            '/f/aa/00009',
+            '/f/aa/00010',
+            '/f/aa/00011',
+            '/f/{v}/{id}',
+            '/g/{id}/r',
+            '/g/{n}/{id}',
+            '/j/i/v',
+            '/j/i/{id?}',
+            '/k/h/{id}',
+            '/br/{n}/{b}',
+            '/a/f/00001',
+            '/a/f/{id}',
+            '/a/aa/b.do',
+            '/a/f/{n}/{id}',
+            '/h/p/c/e',
+            '/h/s/c/e',
+            '/h/s/{a}/{b}',
+            '/e/{id}/{a}/{b}',
+            '/{lt}/l/f/{t}',
+            '/{lt}/l/la/{zip}',
+            '/{lt}/l/l/{t}',
+            '/g/{id}/c/{ci}/{oi}',
+            '/{lt}/l/m/{a}/{b}',
+            '/{lt}/l/f/{t}/{id}',
+            '/{lt}/l/la/{a}/{b}',
+            '/{lt}/l/lb/{t}/{id}',
+            '/g/{id}/c/{ci}/{oi}/f',
+            '/g/{id}/c/{ci}/{oi}/f/{s}',
+            '/s/{p*}',
+            '/j/t/{id*}',
+            '/a/g/{p*}',
+            '/a/t/{p*}',
+            '/a/p/{p*}',
+            '/a/b/{p*}',
+            '/a/c/{s*}',
+            '/b/{bt}/{st*}',
+            '/c/{t}/{i}/{p*}',
+            '/a/c/kp/{p*}',
+            '/br/{p*}',
+            '/br/{t}/{n}/{b*}'
         ];
 
         it('sorts routes in right order', function (done) {
@@ -210,15 +210,16 @@ describe('Call', function () {
             var routesList = [];
             for (var i = 0, il = routes.length; i < il; ++i) {
                 var route = routes[i];
-                if (route.path === '/browse/{path*}') {
+                if (route.path === '/br/{p*}') {
                     r1 = i;
                 }
-                if (route.path === '/browse/{type}/{name}/{browseToken*}') {
+                if (route.path === '/br/{t}/{n}/{b*}') {
                     r2 = i;
                 }
                 routesList.push(route.path);
             }
             // console.log(routesList);
+            // console.log(r2,r1);
             expect(r2<r1).to.be.true();
             done();
         });
