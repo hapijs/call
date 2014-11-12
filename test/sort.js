@@ -85,7 +85,7 @@ describe('Call', function () {
 
             for (var ai = 0, al = paths.length; ai < al; ++ai) {
                 var a = router.analyze(paths[ai]);
-                
+
                 for (var bi = 0, bl = paths.length; bi < bl; ++bi) {
                     if (ai === bi) {
                         continue;
@@ -137,5 +137,91 @@ describe('Call', function () {
                 done();
             });
         }
+    });
+
+    describe('#sort', function () {
+        var paths = [
+            '/a/m',
+            '/b/{bt}',
+            '/d/c.do',
+            '/d/d.do',
+            '/e/{id}',
+            '/c/{t}/{i}',
+            '/f/aa/00001',
+            '/f/aa/00002',
+            '/f/aa/00003',
+            '/f/aa/00004',
+            '/f/aa/{p?}',
+            '/f/aa/00005',
+            '/f/aa/00006',
+            '/f/aa/00007',
+            '/f/aa/00008',
+            '/f/aa/00009',
+            '/f/aa/00010',
+            '/f/aa/00011',
+            '/f/{v}/{id}',
+            '/g/{id}/r',
+            '/g/{n}/{id}',
+            '/j/i/v',
+            '/j/i/{id?}',
+            '/k/h/{id}',
+            '/br/{n}/{b}',
+            '/a/f/00001',
+            '/a/f/{id}',
+            '/a/aa/b.do',
+            '/a/f/{n}/{id}',
+            '/h/p/c/e',
+            '/h/s/c/e',
+            '/h/s/{a}/{b}',
+            '/e/{id}/{a}/{b}',
+            '/{lt}/l/f/{t}',
+            '/{lt}/l/la/{zip}',
+            '/{lt}/l/l/{t}',
+            '/g/{id}/c/{ci}/{oi}',
+            '/{lt}/l/m/{a}/{b}',
+            '/{lt}/l/f/{t}/{id}',
+            '/{lt}/l/la/{a}/{b}',
+            '/{lt}/l/lb/{t}/{id}',
+            '/g/{id}/c/{ci}/{oi}/f',
+            '/g/{id}/c/{ci}/{oi}/f/{s}',
+            '/s/{p*}',
+            '/j/t/{id*}',
+            '/a/g/{p*}',
+            '/a/t/{p*}',
+            '/a/p/{p*}',
+            '/a/b/{p*}',
+            '/a/c/{s*}',
+            '/b/{bt}/{st*}',
+            '/c/{t}/{i}/{p*}',
+            '/a/c/kp/{p*}',
+            '/br/{p*}',
+            '/br/{t}/{n}/{b*}'
+        ];
+
+        it('sorts routes in right order', function (done) {
+            var router = new Call.Router();
+            for (var i = 0, il = paths.length; i < il; ++i) {
+                router.add({ method: 'get', path: paths[i] }, paths[i]);
+            }
+
+            var routes = router.routes['get'];
+            var list = [];
+            var r1 = r2 = 0;
+            var routesList = [];
+            for (var i = 0, il = routes.length; i < il; ++i) {
+                var route = routes[i];
+                if (route.path === '/br/{p*}') {
+                    r1 = i;
+                }
+                if (route.path === '/br/{t}/{n}/{b*}') {
+                    r2 = i;
+                }
+                routesList.push(route.path);
+            }
+            // console.log(routesList);
+            // console.log(r2,r1);
+            expect(r2<r1).to.be.true();
+            done();
+        });
     });
 });
