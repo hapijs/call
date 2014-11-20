@@ -422,6 +422,20 @@ describe('Router', function () {
                     B: '1'
                 },
                 '/A/1/c': false
+            },
+            '/aB/{p}|true': {
+                '/aB/4': {
+                    p: '4'
+                },
+                '/ab/4': false
+            },
+            '/aB/{p}|false': {
+                '/aB/4': {
+                    p: '4'
+                },
+                '/ab/4': {
+                    p: '4'
+                }
             }
         };
 
