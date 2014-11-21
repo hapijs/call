@@ -145,7 +145,7 @@ describe('Router', function () {
             expect(function () {
 
                 router.add({ method: 'get', path: '/a/b/{c}' });
-            }).to.throw('New route: /a/b/{c} conflicts with existing: /a/b/{c}');
+            }).to.throw('New route /a/b/{c} conflicts with existing /a/b/{c}');
 
             done();
         });
@@ -157,7 +157,7 @@ describe('Router', function () {
             expect(function () {
 
                 router.add({ method: 'get', path: '/a/b' });
-            }).to.throw('New route: /a/b conflicts with existing: /a/b/{c?}');
+            }).to.throw('New route /a/b conflicts with existing /a/b/{c?}');
 
             done();
         });
@@ -169,7 +169,7 @@ describe('Router', function () {
             expect(function () {
 
                 router.add({ method: 'get', path: '/a/b/{c?}' });
-            }).to.throw('New route: /a/b/{c?} conflicts with existing: /a/b');
+            }).to.throw('New route /a/b/{c?} conflicts with existing /a/b');
 
             done();
         });
@@ -181,7 +181,7 @@ describe('Router', function () {
             expect(function () {
 
                 router.add({ method: 'get', path: '/test/{p*2}/end' });
-            }).to.throw('New route: /test/{p*2}/end conflicts with existing: /test/{p1}/{p2}/end');
+            }).to.throw('New route /test/{p*2}/end conflicts with existing /test/{p1}/{p2}/end');
 
             done();
         });
@@ -193,7 +193,7 @@ describe('Router', function () {
             expect(function () {
 
                 router.add({ method: 'get', path: '/test/A' });
-            }).to.throw('New route: /test/A conflicts with existing: /test/a');
+            }).to.throw('New route /test/A conflicts with existing /test/a');
 
             done();
         });
@@ -217,7 +217,7 @@ describe('Router', function () {
             expect(function () {
 
                 router.add({ method: 'get', path: '/test/{P}' });
-            }).to.throw('New route: /test/{P} conflicts with existing: /test/{p}');
+            }).to.throw('New route /test/{P} conflicts with existing /test/{p}');
 
             done();
         });
@@ -251,7 +251,7 @@ describe('Router', function () {
             expect(function () {
 
                 router.add({ method: 'get', path: '/a/b/{c}', vhost: 'example.com' });
-            }).to.throw('New route: /a/b/{c} conflicts with existing: /a/b/{c}');
+            }).to.throw('New route /a/b/{c} conflicts with existing /a/b/{c}');
 
             done();
         });
@@ -318,10 +318,10 @@ describe('Router', function () {
                     param: 'a/b'
                 }
             },
-            '/path/{param*}': {
+            '/path/{x*}': {
                 '/a/b/c/d': false,
                 '/path/a/b/to': {
-                    param: 'a/b/to'
+                    x: 'a/b/to'
                 },
                 '/path/': {},
                 '/path': {}
