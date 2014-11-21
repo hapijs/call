@@ -118,7 +118,7 @@ describe('Router', function () {
             ['/a/b/c/d', '/a/b/c/d'],
             ['/a/b/c/e', '/a/b/{p*2}'],
             ['/a/c/b/d', '/a/{p}/b/{x}'],
-            ['/a/b/c/d/e', '/{p*5}'],
+            ['/a/b/c/d/e', '/a/b/{p*}'],
             ['/a/b/c/d/e/f', '/a/b/{p*}'],
             ['/x/b/c/d/e/f/g', '/{a}/b/{p*}'],
             ['/x/y/c/d/e/f/g', '/{p*}']
