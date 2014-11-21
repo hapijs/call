@@ -198,6 +198,30 @@ describe('Router', function () {
             done();
         });
 
+        it('throws on duplicate route (wildcards)', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/a/b/{c*}' });
+            expect(function () {
+
+                router.add({ method: 'get', path: '/a/b/{c*}' });
+            }).to.throw('New route /a/b/{c*} conflicts with existing /a/b/{c*}');
+
+            done();
+        });
+
+        it('throws on duplicate route (mixed)', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/a/b/a{c}' });
+            expect(function () {
+
+                router.add({ method: 'get', path: '/a/b/a{c}' });
+            }).to.throw('New route /a/b/a{c} conflicts with existing /a/b/a{c}');
+
+            done();
+        });
+
         it('allows route to differ in just case', function (done) {
 
             var router = new Call.Router();
@@ -544,6 +568,30 @@ describe('Router', function () {
             var router = new Call.Router();
             router.add({ method: 'get', path: '/{p}' });
             expect(router.route('get', '/%p').output.statusCode).to.equal(400);
+            done();
+        });
+
+        it('fails to match bad request (mixed)', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/a{p}' });
+            expect(router.route('get', '/a%p').output.statusCode).to.equal(400);
+            done();
+        });
+
+        it('fails to match bad request (wildcard)', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/{p*}' });
+            expect(router.route('get', '/%p').output.statusCode).to.equal(400);
+            done();
+        });
+
+        it('fails to match bad request (deep)', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/a/{p}' });
+            expect(router.route('get', '/a/%p').output.statusCode).to.equal(400);
             done();
         });
     });
