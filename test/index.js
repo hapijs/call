@@ -152,6 +152,14 @@ describe('Router', function () {
 
     describe('add()', function () {
 
+        it('adds a route with id', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/a/b/{c}', id: 'a' });
+            expect(router.ids.a.path).to.equal('/a/b/{c}');
+            done();
+        });
+
         it('throws on duplicate route', function (done) {
 
             var router = new Call.Router();
@@ -160,6 +168,18 @@ describe('Router', function () {
 
                 router.add({ method: 'get', path: '/a/b/{c}' });
             }).to.throw('New route /a/b/{c} conflicts with existing /a/b/{c}');
+
+            done();
+        });
+
+        it('throws on duplicate route (id)', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/a/b', id: '1' });
+            expect(function () {
+
+                router.add({ method: 'get', path: '/b', id: '1' });
+            }).to.throw('Route id 1 for path /b conflicts with existing path /a/b');
 
             done();
         });
