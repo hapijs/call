@@ -48,7 +48,7 @@ describe('Router', function () {
         done();
     });
 
-    it('matches routes in right order', function (done) {
+    describe('sort', function () {
 
         var paths = [
             '/',
@@ -84,8 +84,17 @@ describe('Router', function () {
             '/{p*5}',
             '/a/b/{p*}',
             '/{a}/b/{p*}',
-            '/{p*}'
+            '/{p*}',
+            '/m/n/{p*}',
+            '/m/{n}/{o}',
+            '/n/{p*}',
+            '/n/{p}/{o*}'
         ];
+
+        var router = new Call.Router();
+        for (var i = 0, il = paths.length; i < il; ++i) {
+            router.add({ method: 'get', path: paths[i] }, paths[i]);
+        }
 
         var requests = [
             ['/', '/'],
@@ -121,19 +130,25 @@ describe('Router', function () {
             ['/a/b/c/d/e', '/a/b/{p*}'],
             ['/a/b/c/d/e/f', '/a/b/{p*}'],
             ['/x/b/c/d/e/f/g', '/{a}/b/{p*}'],
-            ['/x/y/c/d/e/f/g', '/{p*}']
+            ['/x/y/c/d/e/f/g', '/{p*}'],
+            ['/m/n/o', '/m/n/{p*}'],
+            ['/m/o/p', '/m/{n}/{o}'],
+            ['/n/a/b/c', '/n/{p}/{o*}'],
+            ['/n/a', '/n/{p}/{o*}']
         ];
 
-        var router = new Call.Router();
-        for (var i = 0, il = paths.length; i < il; ++i) {
-            router.add({ method: 'get', path: paths[i] }, paths[i]);
-        }
+        var test = function (path, route) {
+
+            it('matches \'' + path + '\' to \'' + route + '\'', function (done) {
+
+                expect(router.route('get', path).route).to.equal(route);
+                done();
+            });
+        };
 
         for (i = 0, il = requests.length; i < il; ++i) {
-            expect(router.route('get', requests[i][0]).route).to.equal(requests[i][1]);
+            test(requests[i][0], requests[i][1]);
         }
-
-        done();
     });
 
     describe('add()', function () {
