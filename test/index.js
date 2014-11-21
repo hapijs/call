@@ -87,7 +87,6 @@ describe('Router', function () {
             '/{p*}',
             '/m/n/{p*}',
             '/m/{n}/{o}',
-            '/n/{p*}',
             '/n/{p}/{o*}'
         ];
 
@@ -233,6 +232,30 @@ describe('Router', function () {
 
                 router.add({ method: 'get', path: '/a/b/a{c}' });
             }).to.throw('New route /a/b/a{c} conflicts with existing /a/b/a{c}');
+
+            done();
+        });
+
+        it('throws on duplicate route (/a/{p}/{q*}, /a/{p*})', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/a/{p}/{q*}' });
+            expect(function () {
+
+                router.add({ method: 'get', path: '/a/{p*}' });
+            }).to.throw('New route /a/{p*} conflicts with existing /a/{p}/{q*}');
+
+            done();
+        });
+
+        it('throws on duplicate route (/a/{p*}, /a/{p}/{q*})', function (done) {
+
+            var router = new Call.Router();
+            router.add({ method: 'get', path: '/a/{p*}' });
+            expect(function () {
+
+                router.add({ method: 'get', path: '/a/{p}/{q*}' });
+            }).to.throw('New route /a/{p}/{q*} conflicts with existing /a/{p*}');
 
             done();
         });
