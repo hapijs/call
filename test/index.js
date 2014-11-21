@@ -25,11 +25,11 @@ describe('Router', function () {
         var router = new Call.Router();
         router.add({ method: 'get', path: '/' }, '/');
         router.add({ method: 'get', path: '/a' }, '/a');
-        router.add({ method: 'get', path: '/b' }, '/b');
+        router.add({ method: 'get', path: '/a{b?}c{d}' }, '/a{b?}c{d}');
 
         expect(router.route('get', '/').route).to.equal('/');
         expect(router.route('get', '/a').route).to.equal('/a');
-        expect(router.route('get', '/b').route).to.equal('/b');
+        expect(router.route('get', '/abcd').route).to.equal('/a{b?}c{d}');
 
         done();
     });
@@ -518,6 +518,24 @@ describe('Router', function () {
                 '/ab/4': {
                     p: '4'
                 }
+            },
+            '/{a}b{c?}d{e}|true': {
+                '/abcde': {
+                    a: 'a',
+                    c: 'c',
+                    e: 'e'
+                },
+                '/abde': {
+                    a: 'a',
+                    e: 'e'
+                },
+                '/abxyzde': {
+                    a: 'a',
+                    c: 'xyz',
+                    e: 'e'
+                },
+                '/aBcde': false,
+                '/bcde': false
             }
         };
 
