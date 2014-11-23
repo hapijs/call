@@ -536,6 +536,9 @@ describe('Router', function () {
                 },
                 '/aBcde': false,
                 '/bcde': false
+            },
+            '/a/{p}/b': {
+                '/a/': false
             }
         };
 
