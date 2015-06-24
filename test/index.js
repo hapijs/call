@@ -549,15 +549,15 @@ describe('Router', function () {
 
             var mkeys = Object.keys(matches);
             for (var m = 0, ml = mkeys.length; m < ml; ++m) {
-                match(router, path, mkeys[m], matches[mkeys[m]]);
+                match(router, path, mkeys[m], matches[mkeys[m]], isCaseSensitive);
             }
         };
 
-        var match = function (router, path, match, result) {
+        var match = function (router, path, compare, result, isCaseSensitive) {
 
-            it((result ? 'matches' : 'unmatches') + ' the path \'' + path + '\' with ' + match + ' (' + (isCaseSensitive ? 'case-sensitive' : 'case-insensitive') + ')', function (done) {
+            it((result ? 'matches' : 'unmatches') + ' the path \'' + path + '\' with ' + compare + ' (' + (isCaseSensitive ? 'case-sensitive' : 'case-insensitive') + ')', function (done) {
 
-                var output = router.route('get', router.normalize(match));
+                var output = router.route('get', router.normalize(compare));
                 var isMatch = !output.isBoom;
 
                 expect(isMatch).to.equal(!!result);
@@ -577,8 +577,8 @@ describe('Router', function () {
         var keys = Object.keys(paths);
         for (var i = 0, il = keys.length; i < il; ++i) {
             var pathParts = keys[i].split('|');
-            var isCaseSensitive = (pathParts[1] ? pathParts[1] === 'true' : true);
-            test(pathParts[0], paths[keys[i]], isCaseSensitive);
+            var sensitive = (pathParts[1] ? pathParts[1] === 'true' : true);
+            test(pathParts[0], paths[keys[i]], sensitive);
         }
 
         it('matches head routes', function (done) {
