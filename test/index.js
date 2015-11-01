@@ -1,28 +1,30 @@
+'use strict';
+
 // Load modules
 
-var Lab = require('lab');
-var Call = require('../');
-var Code = require('code');
+const Lab = require('lab');
+const Call = require('../');
+const Code = require('code');
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 // Test shortcuts
 
-var lab = exports.lab = Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = Code.expect;
+const lab = exports.lab = Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = Code.expect;
 
 
-describe('Router', function () {
+describe('Router', () => {
 
-    it('routes request', function (done) {
+    it('routes request', (done) => {
 
-        var router = new Call.Router();
+        const router = new Call.Router();
         router.add({ method: 'get', path: '/' }, '/');
         router.add({ method: 'get', path: '/a' }, '/a');
         router.add({ method: 'get', path: '/a{b?}c{d}' }, '/a{b?}c{d}');
@@ -34,9 +36,9 @@ describe('Router', function () {
         done();
     });
 
-    it('routes request (pre-analyzed)', function (done) {
+    it('routes request (pre-analyzed)', (done) => {
 
-        var router = new Call.Router();
+        const router = new Call.Router();
         router.add({ method: 'get', path: '/', analysis: router.analyze('/') }, '/');
         router.add({ method: 'get', path: '/a', analysis: router.analyze('/a') }, '/a');
         router.add({ method: 'get', path: '/b', analysis: router.analyze('/b') }, '/b');
@@ -48,9 +50,9 @@ describe('Router', function () {
         done();
     });
 
-    describe('sort', function () {
+    describe('sort', () => {
 
-        var paths = [
+        const paths = [
             '/',
             '/a',
             '/b',
@@ -90,12 +92,12 @@ describe('Router', function () {
             '/n/{p}/{o*}'
         ];
 
-        var router = new Call.Router();
-        for (var i = 0, il = paths.length; i < il; ++i) {
+        const router = new Call.Router();
+        for (let i = 0; i < paths.length; ++i) {
             router.add({ method: 'get', path: paths[i] }, paths[i]);
         }
 
-        var requests = [
+        const requests = [
             ['/', '/'],
             ['/a', '/a'],
             ['/b', '/b'],
@@ -136,35 +138,35 @@ describe('Router', function () {
             ['/n/a', '/n/{p}/{o*}']
         ];
 
-        var test = function (path, route) {
+        const test = function (path, route) {
 
-            it('matches \'' + path + '\' to \'' + route + '\'', function (done) {
+            it('matches \'' + path + '\' to \'' + route + '\'', (done) => {
 
                 expect(router.route('get', path).route).to.equal(route);
                 done();
             });
         };
 
-        for (i = 0, il = requests.length; i < il; ++i) {
+        for (let i = 0; i < requests.length; ++i) {
             test(requests[i][0], requests[i][1]);
         }
     });
 
-    describe('add()', function () {
+    describe('add()', () => {
 
-        it('adds a route with id', function (done) {
+        it('adds a route with id', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/b/{c}', id: 'a' });
             expect(router.ids.a.path).to.equal('/a/b/{c}');
             done();
         });
 
-        it('throws on duplicate route', function (done) {
+        it('throws on duplicate route', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/b/{c}' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/a/b/{c}' });
             }).to.throw('New route /a/b/{c} conflicts with existing /a/b/{c}');
@@ -172,11 +174,11 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on duplicate route (id)', function (done) {
+        it('throws on duplicate route (id)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/b', id: '1' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/b', id: '1' });
             }).to.throw('Route id 1 for path /b conflicts with existing path /a/b');
@@ -184,11 +186,11 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on duplicate route (optional param in first)', function (done) {
+        it('throws on duplicate route (optional param in first)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/b/{c?}' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/a/b' });
             }).to.throw('New route /a/b conflicts with existing /a/b/{c?}');
@@ -196,11 +198,11 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on duplicate route (optional param in second)', function (done) {
+        it('throws on duplicate route (optional param in second)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/b' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/a/b/{c?}' });
             }).to.throw('New route /a/b/{c?} conflicts with existing /a/b');
@@ -208,11 +210,11 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on duplicate route (same fingerprint)', function (done) {
+        it('throws on duplicate route (same fingerprint)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/test/{p1}/{p2}/end' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/test/{p*2}/end' });
             }).to.throw('New route /test/{p*2}/end conflicts with existing /test/{p1}/{p2}/end');
@@ -220,11 +222,11 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on duplicate route (case insensitive)', function (done) {
+        it('throws on duplicate route (case insensitive)', (done) => {
 
-            var router = new Call.Router({ isCaseSensitive: false });
+            const router = new Call.Router({ isCaseSensitive: false });
             router.add({ method: 'get', path: '/test/a' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/test/A' });
             }).to.throw('New route /test/A conflicts with existing /test/a');
@@ -232,11 +234,11 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on duplicate route (wildcards)', function (done) {
+        it('throws on duplicate route (wildcards)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/b/{c*}' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/a/b/{c*}' });
             }).to.throw('New route /a/b/{c*} conflicts with existing /a/b/{c*}');
@@ -244,11 +246,11 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on duplicate route (mixed)', function (done) {
+        it('throws on duplicate route (mixed)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/b/a{c}' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/a/b/a{c}' });
             }).to.throw('New route /a/b/a{c} conflicts with existing /a/b/a{c}');
@@ -256,11 +258,11 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on duplicate route (/a/{p}/{q*}, /a/{p*})', function (done) {
+        it('throws on duplicate route (/a/{p}/{q*}, /a/{p*})', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/{p}/{q*}' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/a/{p*}' });
             }).to.throw('New route /a/{p*} conflicts with existing /a/{p}/{q*}');
@@ -268,11 +270,11 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on duplicate route (/a/{p*}, /a/{p}/{q*})', function (done) {
+        it('throws on duplicate route (/a/{p*}, /a/{p}/{q*})', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/{p*}' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/a/{p}/{q*}' });
             }).to.throw('New route /a/{p}/{q*} conflicts with existing /a/{p*}');
@@ -280,11 +282,11 @@ describe('Router', function () {
             done();
         });
 
-        it('allows route to differ in just case', function (done) {
+        it('allows route to differ in just case', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/test/a' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/test/A' });
             }).to.not.throw();
@@ -292,11 +294,11 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on duplicate route (different param name)', function (done) {
+        it('throws on duplicate route (different param name)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/test/{p}' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/test/{P}' });
             }).to.throw('New route /test/{P} conflicts with existing /test/{p}');
@@ -304,10 +306,10 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on duplicate parameter name', function (done) {
+        it('throws on duplicate parameter name', (done) => {
 
-            var router = new Call.Router();
-            expect(function () {
+            const router = new Call.Router();
+            expect(() => {
 
                 router.add({ method: 'get', path: '/test/{p}/{p}' });
             }).to.throw('Cannot repeat the same parameter name: p in: /test/{p}/{p}');
@@ -315,10 +317,10 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on invalid path', function (done) {
+        it('throws on invalid path', (done) => {
 
-            var router = new Call.Router();
-            expect(function () {
+            const router = new Call.Router();
+            expect(() => {
 
                 router.add({ method: 'get', path: '/%/%' });
             }).to.throw('Invalid path: /%/%');
@@ -326,11 +328,11 @@ describe('Router', function () {
             done();
         });
 
-        it('throws on duplicate route (same vhost)', function (done) {
+        it('throws on duplicate route (same vhost)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/b/{c}', vhost: 'example.com' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/a/b/{c}', vhost: 'example.com' });
             }).to.throw('New route /a/b/{c} conflicts with existing /a/b/{c}');
@@ -338,11 +340,11 @@ describe('Router', function () {
             done();
         });
 
-        it('allows duplicate route (different vhost)', function (done) {
+        it('allows duplicate route (different vhost)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/b/{c}', vhost: 'one.example.com' });
-            expect(function () {
+            expect(() => {
 
                 router.add({ method: 'get', path: '/a/b/{c}', vhost: 'two.example.com' });
             }).to.not.throw();
@@ -351,37 +353,37 @@ describe('Router', function () {
         });
     });
 
-    describe('special()', function () {
+    describe('special()', () => {
 
-        it('returns special not found route', function (done) {
+        it('returns special not found route', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.special('notFound', 'x');
             expect(router.route('get', '/').route).to.equal('x');
             done();
         });
 
-        it('returns special bad request route', function (done) {
+        it('returns special bad request route', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/{p}' });
             router.special('badRequest', 'x');
             expect(router.route('get', '/%p').route).to.equal('x');
             done();
         });
 
-        it('returns special options route', function (done) {
+        it('returns special options route', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.special('options', 'x');
             expect(router.route('options', '/').route).to.equal('x');
             done();
         });
     });
 
-    describe('route()', function () {
+    describe('route()', () => {
 
-        var paths = {
+        const paths = {
             '/path/to/|false': {
                 '/path/to': false,
                 '/Path/to': false,
@@ -542,31 +544,31 @@ describe('Router', function () {
             }
         };
 
-        var test = function (path, matches, isCaseSensitive) {
+        const test = function (path, matches, isCaseSensitive) {
 
-            var router = new Call.Router({ isCaseSensitive: isCaseSensitive });
+            const router = new Call.Router({ isCaseSensitive: isCaseSensitive });
             router.add({ path: path, method: 'get' }, path);
 
-            var mkeys = Object.keys(matches);
-            for (var m = 0, ml = mkeys.length; m < ml; ++m) {
-                match(router, path, mkeys[m], matches[mkeys[m]], isCaseSensitive);
+            const mkeys = Object.keys(matches);
+            for (let i = 0; i < mkeys.length; ++i) {
+                match(router, path, mkeys[i], matches[mkeys[i]], isCaseSensitive);
             }
         };
 
-        var match = function (router, path, compare, result, isCaseSensitive) {
+        const match = function (router, path, compare, result, isCaseSensitive) {
 
-            it((result ? 'matches' : 'unmatches') + ' the path \'' + path + '\' with ' + compare + ' (' + (isCaseSensitive ? 'case-sensitive' : 'case-insensitive') + ')', function (done) {
+            it((result ? 'matches' : 'unmatches') + ' the path \'' + path + '\' with ' + compare + ' (' + (isCaseSensitive ? 'case-sensitive' : 'case-insensitive') + ')', (done) => {
 
-                var output = router.route('get', router.normalize(compare));
-                var isMatch = !output.isBoom;
+                const output = router.route('get', router.normalize(compare));
+                const isMatch = !output.isBoom;
 
                 expect(isMatch).to.equal(!!result);
                 if (typeof result === 'object') {
-                    var ps = Object.keys(result);
+                    const ps = Object.keys(result);
                     expect(ps.length).to.equal(output.paramsArray.length);
 
-                    for (var p = 0, pl = ps.length; p < pl; ++p) {
-                        expect(output.params[ps[p]]).to.equal(result[ps[p]]);
+                    for (let i = 0; i < ps.length; ++i) {
+                        expect(output.params[ps[i]]).to.equal(result[ps[i]]);
                     }
                 }
 
@@ -574,16 +576,16 @@ describe('Router', function () {
             });
         };
 
-        var keys = Object.keys(paths);
-        for (var i = 0, il = keys.length; i < il; ++i) {
-            var pathParts = keys[i].split('|');
-            var sensitive = (pathParts[1] ? pathParts[1] === 'true' : true);
+        const keys = Object.keys(paths);
+        for (let i = 0; i < keys.length; ++i) {
+            const pathParts = keys[i].split('|');
+            const sensitive = (pathParts[1] ? pathParts[1] === 'true' : true);
             test(pathParts[0], paths[keys[i]], sensitive);
         }
 
-        it('matches head routes', function (done) {
+        it('matches head routes', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a' }, 'a');
             router.add({ method: 'get', path: '/a', vhost: 'special.example.com' }, 'b');
             router.add({ method: 'get', path: '/b', vhost: 'special.example.com' }, 'c');
@@ -601,9 +603,9 @@ describe('Router', function () {
             done();
         });
 
-        it('matches * routes', function (done) {
+        it('matches * routes', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: '*', path: '/a' }, 'a');
             router.add({ method: '*', path: '/a', vhost: 'special.example.com' }, 'b');
 
@@ -612,94 +614,94 @@ describe('Router', function () {
             done();
         });
 
-        it('fails to match head request', function (done) {
+        it('fails to match head request', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             expect(router.route('head', '/').output.statusCode).to.equal(404);
             done();
         });
 
-        it('fails to match options request', function (done) {
+        it('fails to match options request', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             expect(router.route('options', '/').output.statusCode).to.equal(404);
             done();
         });
 
-        it('fails to match get request with vhost (table exists but not route)', function (done) {
+        it('fails to match get request with vhost (table exists but not route)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/', vhost: 'special.example.com' });
             expect(router.route('get', '/x', 'special.example.com').output.statusCode).to.equal(404);
             done();
         });
 
-        it('fails to match head request with vhost (table exists but not route)', function (done) {
+        it('fails to match head request with vhost (table exists but not route)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'head', path: '/', vhost: 'special.example.com' });
             expect(router.route('head', '/x', 'special.example.com').output.statusCode).to.equal(404);
             done();
         });
 
-        it('fails to match bad request', function (done) {
+        it('fails to match bad request', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/{p}' });
             expect(router.route('get', '/%p').output.statusCode).to.equal(400);
             done();
         });
 
-        it('fails to match bad request (mixed)', function (done) {
+        it('fails to match bad request (mixed)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a{p}' });
             expect(router.route('get', '/a%p').output.statusCode).to.equal(400);
             done();
         });
 
-        it('fails to match bad request (wildcard)', function (done) {
+        it('fails to match bad request (wildcard)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/{p*}' });
             expect(router.route('get', '/%p').output.statusCode).to.equal(400);
             done();
         });
 
-        it('fails to match bad request (deep)', function (done) {
+        it('fails to match bad request (deep)', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/{p}' });
             expect(router.route('get', '/a/%p').output.statusCode).to.equal(400);
             done();
         });
     });
 
-    describe('normalize()', function () {
+    describe('normalize()', () => {
 
-        it('normalizes a path', function (done) {
+        it('normalizes a path', (done) => {
 
-            var rawPath = '/%0%1%2%3%4%5%6%7%8%9%a%b%c%d%e%f%10%11%12%13%14%15%16%17%18%19%1a%1b%1c%1d%1e%1f%20%21%22%23%24%25%26%27%28%29%2a%2b%2c%2d%2e%2f%30%31%32%33%34%35%36%37%38%39%3a%3b%3c%3d%3e%3f%40%41%42%43%44%45%46%47%48%49%4a%4b%4c%4d%4e%4f%50%51%52%53%54%55%56%57%58%59%5a%5b%5c%5d%5e%5f%60%61%62%63%64%65%66%67%68%69%6a%6b%6c%6d%6e%6f%70%71%72%73%74%75%76%77%78%79%7a%7b%7c%7d%7e%7f%80%81%82%83%84%85%86%87%88%89%8a%8b%8c%8d%8e%8f%90%91%92%93%94%95%96%97%98%99%9a%9b%9c%9d%9e%9f%a0%a1%a2%a3%a4%a5%a6%a7%a8%a9%aa%ab%ac%ad%ae%af%b0%b1%b2%b3%b4%b5%b6%b7%b8%b9%ba%bb%bc%bd%be%bf%c0%c1%c2%c3%c4%c5%c6%c7%c8%c9%ca%cb%cc%cd%ce%cf%d0%d1%d2%d3%d4%d5%d6%d7%d8%d9%da%db%dc%dd%de%df%e0%e1%e2%e3%e4%e5%e6%e7%e8%e9%ea%eb%ec%ed%ee%ef%f0%f1%f2%f3%f4%f5%f6%f7%f8%f9%fa%fb%fc%fd%fe%ff%0%1%2%3%4%5%6%7%8%9%A%B%C%D%E%F%10%11%12%13%14%15%16%17%18%19%1A%1B%1C%1D%1E%1F%20%21%22%23%24%25%26%27%28%29%2A%2B%2C%2D%2E%2F%30%31%32%33%34%35%36%37%38%39%3A%3B%3C%3D%3E%3F%40%41%42%43%44%45%46%47%48%49%4A%4B%4C%4D%4E%4F%50%51%52%53%54%55%56%57%58%59%5A%5B%5C%5D%5E%5F%60%61%62%63%64%65%66%67%68%69%6A%6B%6C%6D%6E%6F%70%71%72%73%74%75%76%77%78%79%7A%7B%7C%7D%7E%7F%80%81%82%83%84%85%86%87%88%89%8A%8B%8C%8D%8E%8F%90%91%92%93%94%95%96%97%98%99%9A%9B%9C%9D%9E%9F%A0%A1%A2%A3%A4%A5%A6%A7%A8%A9%AA%AB%AC%AD%AE%AF%B0%B1%B2%B3%B4%B5%B6%B7%B8%B9%BA%BB%BC%BD%BE%BF%C0%C1%C2%C3%C4%C5%C6%C7%C8%C9%CA%CB%CC%CD%CE%CF%D0%D1%D2%D3%D4%D5%D6%D7%D8%D9%DA%DB%DC%DD%DE%DF%E0%E1%E2%E3%E4%E5%E6%E7%E8%E9%EA%EB%EC%ED%EE%EF%F0%F1%F2%F3%F4%F5%F6%F7%F8%F9%FA%FB%FC%FD%FE%FF';
-            var normPath = '/%0%1%2%3%4%5%6%7%8%9%a%b%c%d%e%f%10%11%12%13%14%15%16%17%18%19%1A%1B%1C%1D%1E%1F%20!%22%23$%25&\'()*+,-.%2F0123456789:;%3C=%3E%3F@ABCDEFGHIJKLMNOPQRSTUVWXYZ%5B%5C%5D%5E_%60abcdefghijklmnopqrstuvwxyz%7B%7C%7D~%7F%80%81%82%83%84%85%86%87%88%89%8A%8B%8C%8D%8E%8F%90%91%92%93%94%95%96%97%98%99%9A%9B%9C%9D%9E%9F%A0%A1%A2%A3%A4%A5%A6%A7%A8%A9%AA%AB%AC%AD%AE%AF%B0%B1%B2%B3%B4%B5%B6%B7%B8%B9%BA%BB%BC%BD%BE%BF%C0%C1%C2%C3%C4%C5%C6%C7%C8%C9%CA%CB%CC%CD%CE%CF%D0%D1%D2%D3%D4%D5%D6%D7%D8%D9%DA%DB%DC%DD%DE%DF%E0%E1%E2%E3%E4%E5%E6%E7%E8%E9%EA%EB%EC%ED%EE%EF%F0%F1%F2%F3%F4%F5%F6%F7%F8%F9%FA%FB%FC%FD%FE%FF%0%1%2%3%4%5%6%7%8%9%A%B%C%D%E%F%10%11%12%13%14%15%16%17%18%19%1A%1B%1C%1D%1E%1F%20!%22%23$%25&\'()*+,-.%2F0123456789:;%3C=%3E%3F@ABCDEFGHIJKLMNOPQRSTUVWXYZ%5B%5C%5D%5E_%60abcdefghijklmnopqrstuvwxyz%7B%7C%7D~%7F%80%81%82%83%84%85%86%87%88%89%8A%8B%8C%8D%8E%8F%90%91%92%93%94%95%96%97%98%99%9A%9B%9C%9D%9E%9F%A0%A1%A2%A3%A4%A5%A6%A7%A8%A9%AA%AB%AC%AD%AE%AF%B0%B1%B2%B3%B4%B5%B6%B7%B8%B9%BA%BB%BC%BD%BE%BF%C0%C1%C2%C3%C4%C5%C6%C7%C8%C9%CA%CB%CC%CD%CE%CF%D0%D1%D2%D3%D4%D5%D6%D7%D8%D9%DA%DB%DC%DD%DE%DF%E0%E1%E2%E3%E4%E5%E6%E7%E8%E9%EA%EB%EC%ED%EE%EF%F0%F1%F2%F3%F4%F5%F6%F7%F8%F9%FA%FB%FC%FD%FE%FF';
+            const rawPath = '/%0%1%2%3%4%5%6%7%8%9%a%b%c%d%e%f%10%11%12%13%14%15%16%17%18%19%1a%1b%1c%1d%1e%1f%20%21%22%23%24%25%26%27%28%29%2a%2b%2c%2d%2e%2f%30%31%32%33%34%35%36%37%38%39%3a%3b%3c%3d%3e%3f%40%41%42%43%44%45%46%47%48%49%4a%4b%4c%4d%4e%4f%50%51%52%53%54%55%56%57%58%59%5a%5b%5c%5d%5e%5f%60%61%62%63%64%65%66%67%68%69%6a%6b%6c%6d%6e%6f%70%71%72%73%74%75%76%77%78%79%7a%7b%7c%7d%7e%7f%80%81%82%83%84%85%86%87%88%89%8a%8b%8c%8d%8e%8f%90%91%92%93%94%95%96%97%98%99%9a%9b%9c%9d%9e%9f%a0%a1%a2%a3%a4%a5%a6%a7%a8%a9%aa%ab%ac%ad%ae%af%b0%b1%b2%b3%b4%b5%b6%b7%b8%b9%ba%bb%bc%bd%be%bf%c0%c1%c2%c3%c4%c5%c6%c7%c8%c9%ca%cb%cc%cd%ce%cf%d0%d1%d2%d3%d4%d5%d6%d7%d8%d9%da%db%dc%dd%de%df%e0%e1%e2%e3%e4%e5%e6%e7%e8%e9%ea%eb%ec%ed%ee%ef%f0%f1%f2%f3%f4%f5%f6%f7%f8%f9%fa%fb%fc%fd%fe%ff%0%1%2%3%4%5%6%7%8%9%A%B%C%D%E%F%10%11%12%13%14%15%16%17%18%19%1A%1B%1C%1D%1E%1F%20%21%22%23%24%25%26%27%28%29%2A%2B%2C%2D%2E%2F%30%31%32%33%34%35%36%37%38%39%3A%3B%3C%3D%3E%3F%40%41%42%43%44%45%46%47%48%49%4A%4B%4C%4D%4E%4F%50%51%52%53%54%55%56%57%58%59%5A%5B%5C%5D%5E%5F%60%61%62%63%64%65%66%67%68%69%6A%6B%6C%6D%6E%6F%70%71%72%73%74%75%76%77%78%79%7A%7B%7C%7D%7E%7F%80%81%82%83%84%85%86%87%88%89%8A%8B%8C%8D%8E%8F%90%91%92%93%94%95%96%97%98%99%9A%9B%9C%9D%9E%9F%A0%A1%A2%A3%A4%A5%A6%A7%A8%A9%AA%AB%AC%AD%AE%AF%B0%B1%B2%B3%B4%B5%B6%B7%B8%B9%BA%BB%BC%BD%BE%BF%C0%C1%C2%C3%C4%C5%C6%C7%C8%C9%CA%CB%CC%CD%CE%CF%D0%D1%D2%D3%D4%D5%D6%D7%D8%D9%DA%DB%DC%DD%DE%DF%E0%E1%E2%E3%E4%E5%E6%E7%E8%E9%EA%EB%EC%ED%EE%EF%F0%F1%F2%F3%F4%F5%F6%F7%F8%F9%FA%FB%FC%FD%FE%FF';
+            const normPath = '/%0%1%2%3%4%5%6%7%8%9%a%b%c%d%e%f%10%11%12%13%14%15%16%17%18%19%1A%1B%1C%1D%1E%1F%20!%22%23$%25&\'()*+,-.%2F0123456789:;%3C=%3E%3F@ABCDEFGHIJKLMNOPQRSTUVWXYZ%5B%5C%5D%5E_%60abcdefghijklmnopqrstuvwxyz%7B%7C%7D~%7F%80%81%82%83%84%85%86%87%88%89%8A%8B%8C%8D%8E%8F%90%91%92%93%94%95%96%97%98%99%9A%9B%9C%9D%9E%9F%A0%A1%A2%A3%A4%A5%A6%A7%A8%A9%AA%AB%AC%AD%AE%AF%B0%B1%B2%B3%B4%B5%B6%B7%B8%B9%BA%BB%BC%BD%BE%BF%C0%C1%C2%C3%C4%C5%C6%C7%C8%C9%CA%CB%CC%CD%CE%CF%D0%D1%D2%D3%D4%D5%D6%D7%D8%D9%DA%DB%DC%DD%DE%DF%E0%E1%E2%E3%E4%E5%E6%E7%E8%E9%EA%EB%EC%ED%EE%EF%F0%F1%F2%F3%F4%F5%F6%F7%F8%F9%FA%FB%FC%FD%FE%FF%0%1%2%3%4%5%6%7%8%9%A%B%C%D%E%F%10%11%12%13%14%15%16%17%18%19%1A%1B%1C%1D%1E%1F%20!%22%23$%25&\'()*+,-.%2F0123456789:;%3C=%3E%3F@ABCDEFGHIJKLMNOPQRSTUVWXYZ%5B%5C%5D%5E_%60abcdefghijklmnopqrstuvwxyz%7B%7C%7D~%7F%80%81%82%83%84%85%86%87%88%89%8A%8B%8C%8D%8E%8F%90%91%92%93%94%95%96%97%98%99%9A%9B%9C%9D%9E%9F%A0%A1%A2%A3%A4%A5%A6%A7%A8%A9%AA%AB%AC%AD%AE%AF%B0%B1%B2%B3%B4%B5%B6%B7%B8%B9%BA%BB%BC%BD%BE%BF%C0%C1%C2%C3%C4%C5%C6%C7%C8%C9%CA%CB%CC%CD%CE%CF%D0%D1%D2%D3%D4%D5%D6%D7%D8%D9%DA%DB%DC%DD%DE%DF%E0%E1%E2%E3%E4%E5%E6%E7%E8%E9%EA%EB%EC%ED%EE%EF%F0%F1%F2%F3%F4%F5%F6%F7%F8%F9%FA%FB%FC%FD%FE%FF';
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             expect(router.normalize(rawPath)).to.equal(normPath);
             done();
         });
 
-        it('returns empty path on empty', function (done) {
+        it('returns empty path on empty', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             expect(router.normalize('')).to.equal('');
             done();
         });
     });
 
-    describe('analyze()', function () {
+    describe('analyze()', () => {
 
-        it('generates fingerprints', function (done) {
+        it('generates fingerprints', (done) => {
 
-            var paths = {
+            const paths = {
                 '/': '/',
                 '/path': '/path',
                 '/path/': '/path/',
@@ -726,9 +728,9 @@ describe('Router', function () {
                 '/a{p?}b': '/a?b'
             };
 
-            var router = new Call.Router({ isCaseSensitive: true });
-            var keys = Object.keys(paths);
-            for (var i = 0, il = keys.length; i < il; ++i) {
+            const router = new Call.Router({ isCaseSensitive: true });
+            const keys = Object.keys(paths);
+            for (let i = 0; i < keys.length; ++i) {
                 expect(router.analyze(keys[i]).fingerprint).to.equal(paths[keys[i]]);
             }
 
@@ -736,76 +738,76 @@ describe('Router', function () {
         });
     });
 
-    describe('table()', function () {
+    describe('table()', () => {
 
-        it('returns an array of the current routes', function (done) {
+        it('returns an array of the current routes', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ path: '/test/', method: 'get' });
             router.add({ path: '/test/{p}/end', method: 'get' });
 
-            var routes = router.table();
+            const routes = router.table();
 
             expect(routes.length).to.equal(2);
             expect(routes[0]).to.equal('/test/');
             done();
         });
 
-        it('combines global and vhost routes', function (done) {
+        it('combines global and vhost routes', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
 
             router.add({ path: '/test/', method: 'get' });
             router.add({ path: '/test/', vhost: 'one.example.com', method: 'get' });
             router.add({ path: '/test/', vhost: 'two.example.com', method: 'get' });
             router.add({ path: '/test/{p}/end', method: 'get' });
 
-            var routes = router.table();
+            const routes = router.table();
 
             expect(routes.length).to.equal(4);
             done();
         });
 
-        it('combines global and vhost routes and filters based on host', function (done) {
+        it('combines global and vhost routes and filters based on host', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
 
             router.add({ path: '/test/', method: 'get' });
             router.add({ path: '/test/', vhost: 'one.example.com', method: 'get' });
             router.add({ path: '/test/', vhost: 'two.example.com', method: 'get' });
             router.add({ path: '/test/{p}/end', method: 'get' });
 
-            var routes = router.table('one.example.com');
+            const routes = router.table('one.example.com');
 
             expect(routes.length).to.equal(3);
             done();
         });
 
-        it('accepts a list of hosts', function (done) {
+        it('accepts a list of hosts', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
 
             router.add({ path: '/test/', method: 'get' });
             router.add({ path: '/test/', vhost: 'one.example.com', method: 'get' });
             router.add({ path: '/test/', vhost: 'two.example.com', method: 'get' });
             router.add({ path: '/test/{p}/end', method: 'get' });
 
-            var routes = router.table(['one.example.com', 'two.example.com']);
+            const routes = router.table(['one.example.com', 'two.example.com']);
 
             expect(routes.length).to.equal(4);
             done();
         });
 
-        it('ignores unknown host', function (done) {
+        it('ignores unknown host', (done) => {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
 
             router.add({ path: '/test/', method: 'get' });
             router.add({ path: '/test/', vhost: 'one.example.com', method: 'get' });
             router.add({ path: '/test/', vhost: 'two.example.com', method: 'get' });
             router.add({ path: '/test/{p}/end', method: 'get' });
 
-            var routes = router.table('three.example.com');
+            const routes = router.table('three.example.com');
 
             expect(routes.length).to.equal(2);
             done();
