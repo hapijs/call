@@ -678,7 +678,7 @@ describe('Router', () => {
 
         it('fails to match js object prototype properties for literals', function (done) {
 
-            var router = new Call.Router();
+            const router = new Call.Router();
             router.add({ method: 'get', path: '/a/{b}' }, '/');
             expect(router.route('get', '/constructor/').output.statusCode).to.equal(404);
             expect(router.route('get', '/hasOwnProperty/').output.statusCode).to.equal(404);
