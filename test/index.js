@@ -676,7 +676,7 @@ describe('Router', () => {
             done();
         });
 
-        it('fails to match js object prototype properties for literals', function (done) {
+        it('fails to match js object prototype properties for literals', (done)  => {
 
             const router = new Call.Router();
             router.add({ method: 'get', path: '/a/{b}' }, '/');
