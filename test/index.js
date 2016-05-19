@@ -675,6 +675,15 @@ describe('Router', () => {
             expect(router.route('get', '/a/%p').output.statusCode).to.equal(400);
             done();
         });
+
+        it('fails to match js object prototype properties for literals', (done)  => {
+
+            const router = new Call.Router();
+            router.add({ method: 'get', path: '/a/{b}' }, '/');
+            expect(router.route('get', '/constructor/').output.statusCode).to.equal(404);
+            expect(router.route('get', '/hasOwnProperty/').output.statusCode).to.equal(404);
+            done();
+        });
     });
 
     describe('normalize()', () => {
