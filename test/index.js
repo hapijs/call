@@ -450,6 +450,26 @@ describe('Router', () => {
                     p: 'path/'
                 }
             },
+            '/{p}': {
+                '/path': {
+                    p: 'path'
+                },
+                '/': false
+            },
+            '/{p}/': {
+                '/path/': {
+                    p: 'path'
+                },
+                '/p': false,
+                '/': false,
+                '//': false
+            },
+            '/{p?}': {
+                '/path': {
+                    p: 'path'
+                },
+                '/': true
+            },
             '/{a}/b/{p*}': {
                 '/a/b/path/': {
                     a: 'a',
@@ -485,7 +505,8 @@ describe('Router', () => {
                 },
                 '/A/1/c': {
                     b: '1'
-                }
+                },
+                '/a//c': false
             },
             '/a/{B}/c|false': {
                 '/a/1/c': {
