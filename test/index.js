@@ -454,7 +454,8 @@ describe('Router', () => {
                 '/a/b/path/': {
                     a: 'a',
                     p: 'path/'
-                }
+                },
+                '//b/path/': false
             },
             '/a{b?}c': {
                 '/abc': {
