@@ -568,8 +568,8 @@ describe('Router', () => {
 
         const test = function (path, matches, isCaseSensitive) {
 
-            const router = new Call.Router({ isCaseSensitive: isCaseSensitive });
-            router.add({ path: path, method: 'get' }, path);
+            const router = new Call.Router({ isCaseSensitive });
+            router.add({ path, method: 'get' }, path);
 
             const mkeys = Object.keys(matches);
             for (let i = 0; i < mkeys.length; ++i) {
