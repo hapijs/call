@@ -407,7 +407,9 @@ describe('Router', () => {
                 '/path/a/b/to': {
                     x: 'a/b/to'
                 },
-                '/path/': {},
+                '/path/': {
+                    x: ''
+                },
                 '/path': {}
             },
             '/path/{p1}/{p2?}': {
@@ -421,7 +423,8 @@ describe('Router', () => {
                     p1: 'a'
                 },
                 '/path/a/': {
-                    p1: 'a'
+                    p1: 'a',
+                    p2: ''
                 }
             },
             '/path/{p1}/{p2?}|false': {
@@ -434,7 +437,8 @@ describe('Router', () => {
                     p1: 'a'
                 },
                 '/path/a/': {
-                    p1: 'a'
+                    p1: 'a',
+                    p2: ''
                 }
             },
             '/mixedCase/|false': {
@@ -481,7 +485,9 @@ describe('Router', () => {
                 '/abc': {
                     b: 'b'
                 },
-                '/ac': {},
+                '/ac': {
+                    b: ''
+                },
                 '/abC': false,
                 '/Ac': false
             },
@@ -489,7 +495,9 @@ describe('Router', () => {
                 '/abC': {
                     b: 'b'
                 },
-                '/Ac': {}
+                '/Ac': {
+                    b: ''
+                }
             },
             '/%0A': {
                 '/%0A': true,
@@ -551,6 +559,7 @@ describe('Router', () => {
                 },
                 '/abde': {
                     a: 'a',
+                    c: '',
                     e: 'e'
                 },
                 '/abxyzde': {
@@ -698,7 +707,7 @@ describe('Router', () => {
             done();
         });
 
-        it('fails to match js object prototype properties for literals', (done)  => {
+        it('fails to match js object prototype properties for literals', (done) => {
 
             const router = new Call.Router();
             router.add({ method: 'get', path: '/a/{b}' }, '/');
