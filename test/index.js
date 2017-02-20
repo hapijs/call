@@ -735,6 +735,45 @@ describe('Router', () => {
             expect(router.normalize('')).to.equal('');
             done();
         });
+
+        it('applies path segment normalization', (done) => {
+
+            const paths = {
+                './bar': 'bar',
+                '../bar': 'bar',
+                '.././bar': 'bar',
+                'foo/bar/..': 'foo/',
+                '..': '',
+                '.': '',
+                './': '',
+                './/': '/',
+                '/foo/./bar': '/foo/bar',
+                '/bar/.': '/bar/',
+                '/bar/./': '/bar/',
+                '/bar/..': '/',
+                '/bar/../': '/',
+                '/bar/../.': '/',
+                '/foo/../bar': '/bar',
+                '/foo/./../bar': '/bar',
+                '/foo/bar/..': '/foo/',
+                '/..': '/',
+                '/../': '/',
+                '/.': '/',
+                '/./': '/',
+                '//': '//',
+                '//.': '//',
+                '//./': '//',
+                '//../': '/'
+            };
+
+            const router = new Call.Router();
+            const keys = Object.keys(paths);
+            for (let i = 0; i < keys.length; ++i) {
+                expect(router.normalize(keys[i])).to.equal(paths[keys[i]]);
+            }
+
+            done();
+        });
     });
 
     describe('analyze()', () => {
