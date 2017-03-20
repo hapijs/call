@@ -729,10 +729,70 @@ describe('Router', () => {
             done();
         });
 
-        it('returns empty path on empty', (done) => {
+        it('applies path segment normalization', (done) => {
+
+            const paths = {
+                './bar': 'bar',
+                '../bar': 'bar',
+                '.././bar': 'bar',
+                'foo/bar/..': 'foo/',
+                '..': '',
+                '.': '',
+                './': '',
+                './/': '/',
+                '/foo/./bar': '/foo/bar',
+                '/foo/%2e/bar': '/foo/bar',
+                '/bar/.': '/bar/',
+                '/bar/./': '/bar/',
+                '/bar/..': '/',
+                '/bar/../': '/',
+                '/bar/../.': '/',
+                '/foo/../bar': '/bar',
+                '/foo/./../bar': '/bar',
+                '/foo/bar/..': '/foo/',
+                '/..': '/',
+                '/../': '/',
+                '/.': '/',
+                '/./': '/',
+                '//.': '//',
+                '//./': '//',
+                '//../': '/'
+            };
 
             const router = new Call.Router();
-            expect(router.normalize('')).to.equal('');
+            const keys = Object.keys(paths);
+            for (let i = 0; i < keys.length; ++i) {
+                expect(router.normalize(keys[i])).to.equal(paths[keys[i]]);
+            }
+
+            done();
+        });
+
+        it('does not transform specific paths', (done) => {
+
+            const paths = [
+                '',
+                '//',
+                '%2F',
+                '.bar',
+                '.bar/',
+                '.foo/bar',
+                'foo/.bar',
+                'foo/.bar/',
+                'foo/.bar/baz',
+                '/.bar',
+                '/.bar/',
+                '/.foo/bar',
+                '/foo/.bar',
+                '/foo/.bar/',
+                '/foo/.bar/baz'
+            ];
+
+            const router = new Call.Router();
+            for (let i = 0; i < paths.length; ++i) {
+                expect(router.normalize(paths[i])).to.equal(paths[i]);
+            }
+
             done();
         });
     });
