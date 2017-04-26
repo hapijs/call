@@ -72,7 +72,7 @@ const router = new Call.Router(); // Must be called with 'new' operator
 It also accepts options object that currently supports following options:
 
 ```isCaseSensitive: true | false```:<br>
-Specifies if paths should be treated as case sensitive. If set to true, then ```'/users'``` and ```/USERS``` are considered two different paths. Default value is ```true```.
+It specifies if paths should be treated as case sensitive. If set to true, then ```/users``` and ```/USERS``` are considered two different paths. Default value is ```true```.
 
 ### **router.add(config, [routeData])**
 This method add a new route to router. Everytime, a route is added, router's internal table is analyzed to find possible conflicting route. ```config``` object has following fields:<br>
@@ -83,7 +83,7 @@ This method add a new route to router. Everytime, a route is added, router's int
 
 ```.add()``` method also accepts optional data ```routeData```. This can be anything viz. simple primitive data, **object** or some **handler** function that you may want to invoke when this route is matched. Router simply makes it available when the route is matched.
 
-This method throws exception if conflicting path is found, that is, if the path that you are trying to add matches against already added path, then it throws an exception. **This is the coolest thing about this router.**
+This method throws exception for conflicting routes. If the routes that you are trying to add matches against already added route, then it throws an exception. **!!!This is the coolest thing about this router!!!**
 
 #### Dynamic Path segments with Named Parameters:
 
