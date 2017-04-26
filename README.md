@@ -83,7 +83,7 @@ This method add a new route to router. Everytime, a route is added, router's int
 
 ```.add()``` method also accepts optional data ```routeData```. This can be anything viz. simple primitive data, **object** or some **handler** function that you may want to invoke when this route is matched. Router simply makes it available when the route is matched.
 
-This method throws exception for conflicting routes. If the routes that you are trying to add matches against already added route, then it throws an exception. **!!!This is the coolest thing about this router!!!**
+This method throws exception for conflicting routes. If the route that you are trying to add matches against already added route, then it throws an exception. **!!!This is the coolest thing about this router!!!**
 
 #### Dynamic Path segments with Named Parameters:
 
