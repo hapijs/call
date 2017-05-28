@@ -1,7 +1,7 @@
 {
   "name": "call",
   "description": "HTTP Router",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "repository": "git://github.com/hapijs/call",
   "main": "lib/index.js",
   "keywords": [
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "hoek": "4.x.x",
-    "boom": "4.x.x"
+    "boom": "5.x.x"
   },
   "devDependencies": {
     "code": "4.x.x",
