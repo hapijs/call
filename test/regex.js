@@ -84,7 +84,7 @@ describe('Call', () => {
 
             const test = function (path, isValid) {
 
-                it('validates the path \'' + path + '\' as ' + (isValid ? 'well-formed' : 'malformed'), async () => {
+                it('validates the path \'' + path + '\' as ' + (isValid ? 'well-formed' : 'malformed'), () => {
 
                     expect(!!(path.match(pathRegex.validatePath))).to.equal(isValid);
                 });
