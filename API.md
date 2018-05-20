@@ -12,7 +12,7 @@
 
 ## Call
 
-### Router([options])
+### `Router([options])`
 Constructor to create a new router instance. To create router.
 
 ```javascript
@@ -24,14 +24,14 @@ It also accepts options object that currently supports following options:
 
 - `isCaseSensitive` - Default `true`. Specifies if the paths should case sensitive. If set to true, then `/users` and `/USERS` are considered as two different paths.
 
-#### add(config, [routeData])
+#### `add(config, [routeData])`
 This method adds a new route to the router. Everytime a route is added, the router will make sure there are no conflicting routes and will throw on a duplicate. `config` object has following fields:<br>
 
-`method`: HTTP method (get, put, post, delete, etc.). Wildcard character (*) is supported to match all the methods.
+- `method` - HTTP method (get, put, post, delete, etc.). Wildcard character (*) is supported to match all the methods.
 
-`path`: URL path segment to use for route matching. The path segment can be static like `/users/1234` or it can be dynamic path segment (Path segment with named parameters).
+- `path` - URL path segment to use for route matching. The path segment can be static like `/users/1234` or it can be dynamic path segment (Path segment with named parameters).
 
-`.add()` method also accepts an optional data `routeData`. Basically, this is used for associating `handler` function with a route. However, this can be anything viz. simple primitive data, or  an **object** when this route is matched. Router simply makes it available when the route is matched.
+`.add()` - method also accepts an optional data `routeData`. Basically, this is used for associating `handler` function with a route. However, this can be anything viz. simple primitive data, or  an **object** when this route is matched. Router simply makes it available when the route is matched.
 
 _Note*: If the route being added matches against already added route, then this method throws an exception._
 
@@ -68,7 +68,7 @@ When determining what handler to use for a particular request, router searches p
 
 **Call** router has deterministic order than other routers and because of this deterministic order, `call` is able to detect conflicting routes and throw exception accordingly. In comparison, Express.js has different routing mechanism based on simple RegEx pattern matching making it faster (probably it only matters in theory) but unable to catch route conflicts. Read more about this at [Eran Hammer's comments](https://gist.github.com/hueniverse/a3109f716bf25718ba0e).
 
-#### route(method, path)
+#### `route(method, path)`
 For a given method and path as string, router tries to locate given route. If route is found, then it returns an object containing following information:
 
 - `params` - Object containing all path parameters where each **key** is path name and **value** is the corresponding parameter value in URL.

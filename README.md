@@ -5,7 +5,7 @@
 ### Lead Maintainer - [Eran Hammer](https://github.com/hueniverse)
 
 ## Introduction
-`call` is a simple node.js HTTP Router. It is used by popular [hapi.js](https://github.com/hapijs/hapi) web framework. It implements predictable and easy to use routing. Even if it is designed to work with Hapi.js, you can still use it as independent component.
+`call` is a simple node.js HTTP Router. It is used by popular [hapi.js](https://github.com/hapijs/hapi) web framework. It implements predictable and easy to use routing. Even if it is designed to work with Hapi.js, you can still use it as an independent router in your app.
 
 ## Example
 
