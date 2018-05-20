@@ -4,6 +4,7 @@
 
 const Code = require('code');
 const Lab = require('lab');
+
 const Regex = require('../lib/regex');
 
 
@@ -14,9 +15,7 @@ const internals = {};
 
 // Test shortcuts
 
-const lab = exports.lab = Lab.script();
-const describe = lab.describe;
-const it = lab.it;
+const { describe, it } = exports.lab = Lab.script();
 const expect = Code.expect;
 
 
@@ -85,10 +84,9 @@ describe('Call', () => {
 
             const test = function (path, isValid) {
 
-                it('validates the path \'' + path + '\' as ' + (isValid ? 'well-formed' : 'malformed'), (done) => {
+                it('validates the path \'' + path + '\' as ' + (isValid ? 'well-formed' : 'malformed'), () => {
 
                     expect(!!(path.match(pathRegex.validatePath))).to.equal(isValid);
-                    done();
                 });
             };
 
