@@ -6,7 +6,7 @@
 <!-- toc -->
 - [Call](#Call)
   - [`Router([options])`](#Router-options))
-    - [`add(config, [routeData])`](#addconfig-routeData)
+    - [`add(config, [routeData])`](#addconfig-routedata)
     - [`route(method, path)`](#routemethod-path)
 <!-- tocstop -->
 
@@ -60,7 +60,7 @@ Like the optional parameters, a wildcard parameter (for example `/{users*}`) may
 
 `{params*}`: Using this option, it matches anything. So `/users/{user*}` with match `/users/`, `/users/john`, `/users/john/doe`, `/users/john/doe/smith`
 
-For more details about path parameters, (read hapi.js docs)[https://github.com/hapijs/hapi/blob/master/API.md#path-parameters].
+For more details about path parameters, [read hapi.js docs](https://github.com/hapijs/hapi/blob/master/API.md#path-parameters).
 
 **Routing order**
 
