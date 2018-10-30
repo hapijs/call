@@ -1,14 +1,9 @@
-<!-- version -->
-# 5.0.1 API Reference
-<!-- versionstop -->
+# 5.0.x API Reference
 
-
-<!-- toc -->
 - [Call](#Call)
   - [`new Router([options])`](#new-Router-options))
     - [`add(config, [routeData])`](#addconfig-routedata)
     - [`route(method, path)`](#routemethod-path)
-<!-- tocstop -->
 
 ## Call
 
