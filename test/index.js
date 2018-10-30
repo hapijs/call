@@ -86,11 +86,6 @@ describe('Router', () => {
             '/n/{p}/{o*}'
         ];
 
-        const router = new Call.Router();
-        for (let i = 0; i < paths.length; ++i) {
-            router.add({ method: 'get', path: paths[i] }, paths[i]);
-        }
-
         const requests = [
             ['/', '/'],
             ['/a', '/a'],
@@ -136,6 +131,11 @@ describe('Router', () => {
 
             it('matches \'' + path + '\' to \'' + route + '\'', () => {
 
+                const router = new Call.Router();
+                for (let i = 0; i < paths.length; ++i) {
+                    router.add({ method: 'get', path: paths[i] }, paths[i]);
+                }
+
                 expect(router.route('get', path).route).to.equal(route);
             });
         };
@@ -152,6 +152,36 @@ describe('Router', () => {
             const router = new Call.Router();
             router.add({ method: 'get', path: '/a/b/{c}', id: 'a' });
             expect(router.ids.a.path).to.equal('/a/b/{c}');
+        });
+
+        it('sorts mixed paths', () => {
+
+            const paths = [
+                '/a{p}b{x}c',
+                '/ac{p}b',
+                '/ab{p}b',
+                '/cc{p}b',
+                '/a{p}b',
+                '/a{p}',
+                '/{p}b',
+                '/a{p}b{x}'
+            ];
+
+            const router = new Call.Router();
+            for (const path of paths) {
+                router.add({ method: 'get', path }, path);
+            }
+
+            expect(router.routes.get.router._mixed.map((item) => [item.segment.segments, item.segment.length])).to.equal([
+                [['a', 'b', 'c'], 5],
+                [['a', 'b'], 4],
+                [['ab', 'b'], 3],
+                [['ac', 'b'], 3],
+                [['cc', 'b'], 3],
+                [['a', 'b'], 3],
+                [['a'], 2],
+                [['b'], 2]
+            ]);
         });
 
         it('throws on duplicate route', () => {
