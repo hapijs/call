@@ -5,37 +5,39 @@
 
 <!-- toc -->
 - [Call](#Call)
-  - [`Router([options])`](#Router-options))
+  - [`new Router([options])`](#new-Router-options))
     - [`add(config, [routeData])`](#addconfig-routedata)
     - [`route(method, path)`](#routemethod-path)
 <!-- tocstop -->
 
 ## Call
 
-### `Router([options])`
-Constructor to create a new router instance. To create router.
+### `new Router([options])`
 
-```javascript
-// Must be called with 'new' operator
+Constructor to create a new router instance where:
+- `options` - an optional configuration object with the following fields:
+    - `isCaseSensitive` - specifies if the paths should case sensitive. If set to `true`,
+    `/users` and `/USERS` are considered as two different paths. Defaults to `true`.
+    
+```js
 const router = new Call.Router();
 ```
 
-It also accepts options object that currently supports following options:
 
-- `isCaseSensitive` - Default `true`. Specifies if the paths should case sensitive. If set to true, then `/users` and `/USERS` are considered as two different paths.
+#### `add(options, [data])`
 
-#### `add(config, [routeData])`
-This method adds a new route to the router. Everytime a route is added, the router will make sure there are no conflicting routes and will throw on a duplicate. `config` object has following fields:<br>
+Adds a new route to the router where:
+- `options` - a configuration object with the following fields:
+    - `method` - the HTTP method (`'get'`, `'put'`, `'post'`, `'delete'`, etc.) or the wildcard
+      character (`'*'`) to match any methods.
+    - `path` - the URL path to be used for route matching. The path segment can be static like
+      `'/users/1234'` or it can be a [dynamic path](#Dynamic-Paths).
+- `data` - the application data to retrieve when a route match is found during lookup. This is
+  typically the route handler or other metadata about what to do when a route is matched.
 
-- `method` - HTTP method (get, put, post, delete, etc.). Wildcard character (*) is supported to match all the methods.
+Throws on invalid route configuration or on a conflict with existing routes.
 
-- `path` - URL path segment to use for route matching. The path segment can be static like `/users/1234` or it can be dynamic path segment (Path segment with named parameters).
-
-`.add()` - method also accepts an optional data `routeData`. Basically, this is used for associating `handler` function with a route. However, this can be anything viz. simple primitive data, or  an **object** when this route is matched. Router simply makes it available when the route is matched.
-
-_Note*: If the route being added matches against already added route, then this method throws an exception._
-
-##### Dynamic Path segments with Named Parameters:
+##### Dynamic Paths
 
 **Exact match**
 
@@ -62,19 +64,24 @@ Like the optional parameters, a wildcard parameter (for example `/{users*}`) may
 
 For more details about path parameters, [read hapi.js docs](https://github.com/hapijs/hapi/blob/master/API.md#path-parameters).
 
+
 **Routing order**
 
 When determining what handler to use for a particular request, router searches paths in order from most specific to least specific. That means if you have two routes, one with the path `/filename.jpg` and a second route `/filename.{ext}` a request to /filename.jpg will match the first route, and not the second. This also means that a route with the path `/{files*}` will be the last route tested, and will only match if all other routes fail.
 
 **Call** router has deterministic order than other routers and because of this deterministic order, `call` is able to detect conflicting routes and throw exception accordingly. In comparison, Express.js has different routing mechanism based on simple RegEx pattern matching making it faster (probably it only matters in theory) but unable to catch route conflicts. Read more about this at [Eran Hammer's comments](https://gist.github.com/hueniverse/a3109f716bf25718ba0e).
 
+
 #### `route(method, path)`
-For a given method and path as string, router tries to locate given route. If route is found, then it returns an object containing following information:
 
-- `params` - Object containing all path parameters where each **key** is path name and **value** is the corresponding parameter value in URL.
+Finds a matching route where:
+- `method` - the requested route method.
+- `path` - the requested route path.
 
-- `paramsArray` - All the parameter values in order as array.
+Returns an object with the following when a match is found:
+- `params` - an object containing all path parameters where each **key** is path name and
+  **value** is the corresponding parameter value in the requested `path`.
+- `paramsArray` - an array of the parameter values in order.
+- `route` - the `data` value provided when the route was added.
 
-- `route` - provides optional `routeData` if it was added when a matched route was added.
-
-If no route is found, then it returns a **[Boom](https://github.com/hapijs/boom)** error message with status code of 404.
+If no match is found, returns (not throws) an error.
