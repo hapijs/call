@@ -1,7 +1,7 @@
 {
   "name": "call",
   "description": "HTTP Router",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "repository": "git://github.com/hapijs/call",
   "main": "lib/index.js",
   "keywords": [
