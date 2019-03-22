@@ -1,18 +1,13 @@
 'use strict';
 
-// Load modules
-
 const Code = require('code');
 const Lab = require('lab');
+
 const Regex = require('../lib/regex');
 
 
-// Declare internals
-
 const internals = {};
 
-
-// Test shortcuts
 
 const lab = exports.lab = Lab.script();
 const describe = lab.describe;

@@ -1,5 +1,5 @@
 {
-  "name": "call",
+  "name": "@commercial/call",
   "description": "HTTP Router",
   "version": "4.0.2",
   "repository": "git://github.com/hapijs/call",
@@ -8,20 +8,17 @@
     "HTTP",
     "router"
   ],
-  "engines": {
-    "node": ">=4.0.0"
-  },
   "dependencies": {
-    "hoek": "4.x.x",
-    "boom": "5.x.x"
+    "@commercial/hoek": "4.x.x",
+    "@commercial/boom": "5.x.x"
   },
   "devDependencies": {
     "code": "4.x.x",
-    "lab": "13.x.x"
+    "lab": "14.x.x"
   },
   "scripts": {
-    "test": "lab -a code -t 100 -L",
-    "test-cov-html": "lab -a code -r html -o coverage.html"
+    "test": "lab -a code -t 100 -L -l",
+    "test-cov-html": "lab -a code -r html -o coverage.html -l"
   },
-  "license": "BSD-3-Clause"
+  "license": "SEE LICENSE IN LICENSE.md"
 }

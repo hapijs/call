@@ -1,18 +1,12 @@
 'use strict';
 
-// Load modules
-
 const Lab = require('lab');
 const Call = require('../');
 const Code = require('code');
 
 
-// Declare internals
-
 const internals = {};
 
-
-// Test shortcuts
 
 const lab = exports.lab = Lab.script();
 const describe = lab.describe;
@@ -159,6 +153,38 @@ describe('Router', () => {
             const router = new Call.Router();
             router.add({ method: 'get', path: '/a/b/{c}', id: 'a' });
             expect(router.ids.a.path).to.equal('/a/b/{c}');
+            done();
+        });
+
+        it('sorts mixed paths', (done) => {
+
+            const paths = [
+                '/a{p}b{x}c',
+                '/ac{p}b',
+                '/ab{p}b',
+                '/cc{p}b',
+                '/a{p}b',
+                '/a{p}',
+                '/{p}b',
+                '/a{p}b{x}'
+            ];
+
+            const router = new Call.Router();
+            for (const path of paths) {
+                router.add({ method: 'get', path }, path);
+            }
+
+            expect(router.routes.get.router._mixed.map((item) => [item.segment.segments, item.segment.length])).to.equal([
+                [['a', 'b', 'c'], 5],
+                [['a', 'b'], 4],
+                [['ab', 'b'], 3],
+                [['ac', 'b'], 3],
+                [['cc', 'b'], 3],
+                [['a', 'b'], 3],
+                [['a'], 2],
+                [['b'], 2]
+            ]);
+
             done();
         });
 
