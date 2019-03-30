@@ -1,16 +1,19 @@
-# call - Simple HTTP Router
+# call
+
+Simple HTTP Router
 
 [![Build Status](https://secure.travis-ci.org/hapijs/call.png)](http://travis-ci.org/hapijs/call)
 
 ### Lead Maintainer - [Eran Hammer](https://github.com/hueniverse)
 
 ## Introduction
+
 `call` is a simple node.js HTTP Router. It is used by popular [hapi.js](https://github.com/hapijs/hapi) web framework. It implements predictable and easy to use routing. Even if it is designed to work with Hapi.js, you can still use it as an independent router in your app.
 
 ## Example
 
-``` javascript
-const Call = require('call');
+```js
+const Call = require('@hapi/call');
 
 // Create new router
 const router = new Call.Router();
@@ -47,4 +50,5 @@ router.route('put', '/users/1234');
 ```
 
 ## API
+
 See the detailed [API Reference](./API.md).
