@@ -4,7 +4,7 @@
 
 Simple HTTP Router
 
-[![Build Status](https://secure.travis-ci.org/hapijs/call.png)](http://travis-ci.org/hapijs/call)
+[![Build Status](https://secure.travis-ci.org/hapijs/call.png)](http://travis-ci.org/hapijs/call) [![Greenkeeper badge](https://badges.greenkeeper.io/hapijs/call.svg)](https://greenkeeper.io/)
 
 ## Introduction
 
