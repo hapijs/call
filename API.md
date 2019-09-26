@@ -1,11 +1,3 @@
-# 5.0.x API Reference
-
-- [Call](#Call)
-  - [`new Router([options])`](#new-Router-options))
-    - [`add(config, [routeData])`](#addconfig-routedata)
-    - [`route(method, path)`](#routemethod-path)
-
-## Call
 
 ### `new Router([options])`
 
