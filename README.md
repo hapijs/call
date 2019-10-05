@@ -1,54 +1,16 @@
-<a href="http://hapijs.com"><img src="https://raw.githubusercontent.com/hapijs/assets/master/images/family.png" width="180px" align="right" /></a>
+<a href="https://hapi.dev"><img src="https://raw.githubusercontent.com/hapijs/assets/master/images/family.png" width="180px" align="right" /></a>
 
 # @hapi/call
 
-Simple HTTP Router
+#### Simple HTTP Router.
 
-[![Build Status](https://secure.travis-ci.org/hapijs/call.png)](http://travis-ci.org/hapijs/call)
+**call** is part of the **hapi** ecosystem and was designed to work seamlessly with the [hapi web framework](https://hapi.dev) and its other components (but works great on its own or with other frameworks). If you are using a different web framework and find this module useful, check out [hapi](https://hapi.dev) – they work even better together.
 
-## Introduction
+### Visit the [hapi.dev](https://hapi.dev) Developer Portal for tutorials, documentation, and support
 
-`call` is a simple node.js HTTP Router. It is used by popular [hapi.js](https://github.com/hapijs/hapi) web framework. It implements predictable and easy to use routing. Even if it is designed to work with Hapi.js, you can still use it as an independent router in your app.
+## Useful resources
 
-## Example
-
-```js
-const Call = require('@hapi/call');
-
-// Create new router
-const router = new Call.Router();
-
-// Add route
-router.add({ method: 'get', path: '/' }, { label: 'root-path' });
-
-// Add another route
-router.add({ method: 'post', path: '/users' }, 'route specific data');
-
-// Add another route with dynamic path
-router.add({ method: 'put', path: '/users/{userId}' }, () => { /* ...handler... */ });
-
-// Match route
-router.route('post', '/users');
-/* If matching route is found, it returns an object containing
-    {
-        params: {},                     // All dynamic path parameters as key/value
-        paramsArray: [],                // All dynamic path parameter values in order
-        route: 'route specific data';   // routeData
-    }
-*/
-
-
-// Match route
-router.route('put', '/users/1234');
-/* returns
-    {
-        params: { userId: '1234' },
-        paramsArray: [ '1234' ],
-        route: [Function]
-    }
-*/
-```
-
-## API
-
-See the detailed [API Reference](./API.md).
+- [Documentation and API](https://hapi.dev/family/call/)
+- [Version status](https://hapi.dev/resources/status/#call) (builds, dependencies, node versions, licenses, eol)
+- [Project policies](https://hapi.dev/policies/)
+- [Free and commercial support options](https://hapi.dev/support/)
