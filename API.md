@@ -16,7 +16,7 @@ const router = new Call.Router();
 Adds a new route to the router where:
 - `options` - a configuration object with the following fields:
     - `method` - the HTTP method (`'get'`, `'put'`, `'post'`, `'delete'`, etc.) or the wildcard
-      character (`'*'`) to match any methods. **must be lowercase**
+      character (`'*'`) to match any methods. The method must be lowercase.
     - `path` - the URL path to be used for route matching. The path segment can be static like
       `'/users/1234'` or it can be a [dynamic path](#Dynamic-Paths).
 - `data` - the application data to retrieve when a route match is found during lookup. This is
