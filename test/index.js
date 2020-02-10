@@ -145,7 +145,7 @@ describe('Router', () => {
 
             const router = new Call.Router();
             router.add({ method: 'get', path: '/a/b/{c}', id: 'a' });
-            expect(router.ids.a.path).to.equal('/a/b/{c}');
+            expect(router.ids.get('a').path).to.equal('/a/b/{c}');
         });
 
         it('sorts mixed paths', () => {
@@ -166,7 +166,7 @@ describe('Router', () => {
                 router.add({ method: 'get', path }, path);
             }
 
-            expect(router.routes.get.router._mixed.map((item) => [item.segment.segments, item.segment.length])).to.equal([
+            expect(router.routes.get('get').router._mixed.map((item) => [item.segment.segments, item.segment.length])).to.equal([
                 [['a', 'b', 'c'], 5],
                 [['a', 'b'], 4],
                 [['ab', 'b'], 3],
