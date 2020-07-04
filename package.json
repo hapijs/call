@@ -1,16 +1,19 @@
 {
-  "name": "@hapi/call",
+  "name": "@commercial/call",
   "description": "HTTP Router",
   "version": "5.1.3",
   "repository": "git://github.com/hapijs/call",
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "main": "lib/index.js",
   "keywords": [
     "HTTP",
     "router"
   ],
   "dependencies": {
-    "@hapi/hoek": "8.x.x",
-    "@hapi/boom": "7.x.x"
+    "@commercial/hoek": "^8.5.1",
+    "@commercial/boom": "^7.4.11"
   },
   "devDependencies": {
     "@hapi/code": "6.x.x",
@@ -20,5 +23,5 @@
     "test": "lab -a @hapi/code -t 100 -L",
     "test-cov-html": "lab -a @hapi/code -r html -o coverage.html"
   },
-  "license": "BSD-3-Clause"
+  "license": "SEE LICENSE IN LICENSE.md"
 }
