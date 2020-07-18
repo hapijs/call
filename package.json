@@ -12,7 +12,6 @@
     "router"
   ],
   "dependencies": {
-    "@hapi/address": "4.x.x",
     "@hapi/boom": "9.x.x",
     "@hapi/hoek": "9.x.x"
   },
