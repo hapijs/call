@@ -69,7 +69,7 @@ For more details about path parameters, [read hapi.js docs](https://github.com/h
 
 When determining what handler to use for a particular request, router searches paths in order from most specific to least specific. That means if you have two routes, one with the path `/filename.jpg` and a second route `/filename.{ext}` a request to /filename.jpg will match the first route, and not the second. This also means that a route with the path `/{files*}` will be the last route tested, and will only match if all other routes fail.
 
-**Call** router has deterministic order than other routers and because of this deterministic order, `call` is able to detect conflicting routes and throw exception accordingly. In comparison, Express.js has different routing mechanism based on simple RegEx pattern matching making it faster (probably it only matters in theory) but unable to catch route conflicts. Read more about this at [Eran Hammer's comments](https://gist.github.com/hueniverse/a3109f716bf25718ba0e).
+**Call** router has deterministic order than other routers and because of this deterministic order, `call` is able to detect conflicting routes and throw exception accordingly. In comparison, Express.js has different routing mechanism based on simple RegEx pattern matching making it faster (probably it only matters in theory) but unable to catch route conflicts.
 
 ## Method
 
