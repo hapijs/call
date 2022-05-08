@@ -21,7 +21,7 @@
     "@hapi/hoek": "^10.0.0"
   },
   "devDependencies": {
-    "@hapi/code": "^8.0.0",
+    "@hapi/code": "^9.0.0",
     "@hapi/eslint-plugin": "*",
     "@hapi/lab": "^25.0.1"
   },
