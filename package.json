@@ -1,5 +1,5 @@
 {
-  "name": "@commercial/call",
+  "name": "call",
   "description": "HTTP Router",
   "version": "4.1.1",
   "repository": "git://github.com/hapijs/call",
@@ -12,8 +12,8 @@
     "router"
   ],
   "dependencies": {
-    "@commercial/hoek": "4.x.x",
-    "@commercial/boom": "5.x.x"
+    "hoek": "4.x.x",
+    "boom": "5.x.x"
   },
   "devDependencies": {
     "code": "4.x.x",
