@@ -377,10 +377,10 @@ describe('Router', () => {
                 '/path/to/': true,
                 '/Path/to/': false
             },
-            '/path/{param*2}/to': {
-                '/a/b/c/d': false,
-                '/path/a/b/to': {
-                    param: 'a/b'
+            '/path/{param*3}/to': {
+                '/a/b/c/d/e': false,
+                '/path/a/b/c/to': {
+                    param: 'a/b/c'
                 }
             },
             '/path/{x*}': {
@@ -433,13 +433,17 @@ describe('Router', () => {
             '/{p*}': {
                 '/path/': {
                     p: 'path/'
-                }
+                },
+                '/a%2fb': false
             },
             '/{p}': {
                 '/path': {
                     p: 'path'
                 },
-                '/': false
+                '/': false,
+                '/a%2fb': {
+                    p: 'a/b'
+                }
             },
             '/{p}/': {
                 '/path/': {
@@ -453,7 +457,10 @@ describe('Router', () => {
                 '/path': {
                     p: 'path'
                 },
-                '/': true
+                '/': true,
+                '/a%2fb': {
+                    p: 'a/b'
+                }
             },
             '/{a}/b/{p*}': {
                 '/a/b/path/': {
@@ -553,6 +560,19 @@ describe('Router', () => {
             },
             '/a/{p}/b': {
                 '/a/': false
+            },
+            '/{p*2}': {
+                '/a/b%2fc': false
+            },
+            '/files/{p*}': {
+                '/files/a%2f..%2fsecret': false
+            },
+            '/{a}.{b}/{c*}': {
+                '/x.y%2fz/q': {
+                    a: 'x',
+                    b: 'y/z',
+                    c: 'q'
+                }
             }
         };
 

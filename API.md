@@ -57,11 +57,15 @@ It is important to be aware that only the last named parameter in a path can be 
 
 `{params*n}`: With path configuration `/users/{user*2}`, it matches `/users/john/doe` or `/users/harshal/patil` but not `/users/john`. Number **n** after asterisk sign specifies the multiplier.
 
-Like the optional parameters, a wildcard parameter (for example `/{users*}`) may only appear as the last parameter in your path.
+Multi-segment parameters will return a Bad Request error (code `400`), if any percent-encoded forward slashes (/) ie. '%2F' are present.
 
 ### Catch all
 
 `{params*}`: Using this option, it matches anything. So `/users/{user*}` with match `/users/`, `/users/john`, `/users/john/doe`, `/users/john/doe/smith`
+
+Like the optional parameters, a wildcard parameter (for example `/{users*}`) may only appear as the last parameter in your path.
+
+Catch all parameters will return a Bad Request error (code `400`), if any percent-encoded forward slashes (/) ie. '%2F' are present.
 
 For more details about path parameters, [read hapi.js docs](https://github.com/hapijs/hapi/blob/master/API.md#path-parameters).
 
@@ -109,4 +113,4 @@ Returns an object with the following when a match is found:
 - `paramsArray` - an array of the parameter values in order.
 - `route` - the `data` value provided when the route was added.
 
-If no match is found, returns (not throws) an error.
+If no match or other issue is found, returns (not throws) a Boom error.
